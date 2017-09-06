@@ -6,4 +6,23 @@
         <attr name="numLines" format="integer" />
         <attr name="colorClickableText" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="AspectLockedImageView">
+        <attr name="AspectLockedImageView_ratio" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="AspectLockedFrameLayout">
+        <attr name="aspectRatio" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="SelectableRoundedImageView">
+        <attr name="sriv_left_top_corner_radius" format="dimension" />
+        <attr name="sriv_right_top_corner_radius" format="dimension" />
+        <attr name="sriv_left_bottom_corner_radius" format="dimension" />
+        <attr name="sriv_right_bottom_corner_radius" format="dimension" />
+        <attr name="sriv_border_width" format="dimension" />
+        <attr name="sriv_border_color" format="color" />
+        <attr name="sriv_oval" format="boolean" />
+        <attr name="android:scaleType" />
+    </declare-styleable>
 </resources>
