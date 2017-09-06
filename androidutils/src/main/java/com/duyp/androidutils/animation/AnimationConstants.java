@@ -1,4 +1,4 @@
-package com.duyp.androidutils.constants;
+package com.duyp.androidutils.animation;
 
 /**
  * Created by duypham on 9/6/17.

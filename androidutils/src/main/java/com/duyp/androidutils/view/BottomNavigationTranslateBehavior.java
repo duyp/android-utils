@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
-import com.duyp.androidutils.constants.AnimationConstants;
+import com.duyp.androidutils.animation.AnimationConstants;
 
 /**
  * Created by Nikola D. on 3/15/2016.
