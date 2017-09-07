@@ -4,14 +4,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Toast;
 
 
 /**
  */
-public class DialogUtils {
+public class AlertUtils {
 
-    private static final String TAG = "DialogUtils";
+    private static final String TAG = "AlertUtils";
 
     public static void showConfirmDialog(Activity activity, String message, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener) {
         new AlertDialog.Builder(activity)
@@ -74,5 +78,45 @@ public class DialogUtils {
                 .show();
 
 
+    }
+
+    public static void showToastLongMessage(Context context, String message) {
+        if (context != null)
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    public static void showToastShortMessage(Context context, String message) {
+        if (context != null)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private static void showSnackBarInternal(View layout, String message,
+                                             @Nullable String actionText,
+                                             @Nullable View.OnClickListener actionClick,
+                                             int duration) {
+        if (layout != null && !TextUtils.isEmpty(message)) {
+            CommonUtils.hideSoftKeyboard(layout.getContext());
+            Snackbar snackbar = Snackbar.make(layout, message, duration);
+            if (actionText != null && actionClick != null) {
+                snackbar.setAction(actionText, actionClick);
+            }
+            snackbar.show();
+        }
+    }
+
+    public static void showSnackBarLongMessage(View layout, String message, String actionText, View.OnClickListener actionClick) {
+        showSnackBarInternal(layout, message, actionText, actionClick, Snackbar.LENGTH_LONG);
+    }
+
+    public static void showSnackBarShortMessage(View layout, String message, String actionText, View.OnClickListener actionClick) {
+        showSnackBarInternal(layout, message, actionText, actionClick, Snackbar.LENGTH_SHORT);
+    }
+
+    public static void showSnackBarLongMessage(View layout, String message) {
+        showSnackBarInternal(layout, message, null, null, Snackbar.LENGTH_LONG);
+    }
+
+    public static void showSnackBarShortMessage(View layout, String message) {
+        showSnackBarInternal(layout, message, null, null, Snackbar.LENGTH_SHORT);
     }
 }

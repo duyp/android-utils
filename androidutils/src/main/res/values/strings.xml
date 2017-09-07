@@ -9,4 +9,6 @@
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
     <string name="dialog_close">Close</string>
+
+    <string name="format_google_map_intent_uri" formatted="true" translatable="false">geo:%s?q=%s(%s)</string>
 </resources>
