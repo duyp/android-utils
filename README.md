@@ -11,12 +11,11 @@ Gradle:
 Add the JitPack repository to your build file
 
 ```groovy
-  allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
   
 Add the dependency
