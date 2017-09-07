@@ -10,6 +10,6 @@ public class StringUtils {
 
     public static String getBasicAuth(String username, String password) {
         String credentials = username + ":" + password;
-        return Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        return "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
     }
 }
