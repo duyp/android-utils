@@ -21,7 +21,7 @@ allprojects {
 Add the dependency
 
 ```groovy
-compile 'com.github.duyp:android-utils:1.0.2'
+compile 'com.github.duyp:android-utils:1.0.3'
 ```
 
 License
