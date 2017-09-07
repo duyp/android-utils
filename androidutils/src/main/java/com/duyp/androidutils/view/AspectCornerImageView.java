@@ -29,8 +29,9 @@ import com.duyp.androidutils.R;
 
 /**
  * Created by DELL on 3/1/2016.
+ *
  */
-public class AspectConerImageView extends AppCompatImageView {
+public class AspectCornerImageView extends AppCompatImageView {
 
     public static final String TAG = "AspectConerImageView";
 
@@ -69,11 +70,11 @@ public class AspectConerImageView extends AppCompatImageView {
 
     private float[] mRadii = new float[]{0, 0, 0, 0, 0, 0, 0, 0};
 
-    public AspectConerImageView(Context context) {
+    public AspectCornerImageView(Context context) {
         super(context);
     }
 
-    public AspectConerImageView(Context context, AttributeSet attrs) {
+    public AspectCornerImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
@@ -165,7 +166,7 @@ public class AspectConerImageView extends AppCompatImageView {
         }
     }
 
-    public AspectConerImageView(Context context, AttributeSet attrs, int defStyle) {
+    public AspectCornerImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         final TypedArray b = context.obtainStyledAttributes(attrs, R.styleable.AspectLockedImageView);
