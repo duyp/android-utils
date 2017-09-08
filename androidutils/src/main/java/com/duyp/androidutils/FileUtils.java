@@ -60,7 +60,16 @@ public class FileUtils {
         return file;
     }
 
-    public static Uri getUriFromFile(Context context, File file) {
+    /**
+     * Get Uri from given file
+     * In android N, please read this document before using this function
+     * https://developer.android.com/reference/android/support/v4/content/FileProvider.html
+     * @param context any context
+     * @param file given file
+     * @return uri
+     * @throws Exception if can't retrieve url for given file
+     */
+    public static Uri getUriFromFile(Context context, File file) throws Exception {
         Uri fileUri;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             fileUri = FileProvider.getUriForFile(context,
