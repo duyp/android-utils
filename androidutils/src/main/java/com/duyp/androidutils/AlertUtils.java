@@ -23,6 +23,10 @@ public class AlertUtils {
         showConfirmDialog(context, null, message, positiveListener, null);
     }
 
+    public static void showConfirmDialog(Context context, String title, String message, DialogInterface.OnClickListener positiveListener) {
+        showConfirmDialog(context, title, message, positiveListener, null);
+    }
+
     public static void showConfirmDialog(Context context, String message, DialogInterface.OnClickListener positiveListener,
                                          DialogInterface.OnClickListener negativeListener) {
         showConfirmDialog(context, null, message, positiveListener, negativeListener);
