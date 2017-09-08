@@ -143,11 +143,15 @@ public class NavigationUtils {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri fileUri = FileUtils.getUriFromFile(activity, photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        fileUri);
-                activity.startActivityForResult(takePictureIntent, requestCode);
-                return fileUri;
+                try {
+                    Uri fileUri = FileUtils.getUriFromFile(activity, photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            fileUri);
+                    activity.startActivityForResult(takePictureIntent, requestCode);
+                    return fileUri;
+                } catch (Exception e) {
+                    return null;
+                }
             }
         }
         return null;
