@@ -76,6 +76,14 @@ public class NavigationUtils {
     }
 
     /**
+     * Open system location setting
+     * @param context context
+     */
+    public static void openLocationSetting(Context context) {
+        context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+    }
+
+    /**
      * Open gallery picker with specific type and request code
      * @param activity host activity
      * @param type type of result (e.g "image/*", "video/*")
