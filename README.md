@@ -1,7 +1,7 @@
 Android-Utils
 ========
 
-Combination of common Android Utils
+Combination of common Android Utils used in almost adroid projects
 
 Download
 --------
