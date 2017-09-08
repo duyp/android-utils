@@ -21,7 +21,7 @@ allprojects {
 Add the dependency to modul 's gradle file
 
 ```groovy
-compile 'com.github.duyp:android-utils:1.0.6'
+compile 'com.github.duyp:android-utils:1.0.7'
 ```
 
 License
