@@ -35,6 +35,14 @@ public class AlertUtils {
                 positiveListener, negativeListener);
     }
 
+    public static void showAlertDialog(Context context, String message) {
+        showAlertDialog(context, null, message, null);
+    }
+
+    public static void showAlertDialog(Context context, String title, String message) {
+        showAlertDialog(context, title, message, null);
+    }
+
     public static void showAlertDialog(Context context, String title, String message, DialogInterface.OnClickListener listener) {
         showAlertDialog(context, title, message, context.getString(R.string.dialog_ok), listener);
     }
