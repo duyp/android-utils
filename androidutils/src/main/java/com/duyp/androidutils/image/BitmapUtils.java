@@ -10,26 +10,21 @@
 // - Sun Tsu,
 // "The Art of War"
 
-package com.duyp.androidutils.bitmap;
+package com.duyp.androidutils.image;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.SystemClock;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Base64;
 import android.util.Log;
-import android.util.Pair;
 
 import com.duyp.androidutils.FileUtils;
 
@@ -37,10 +32,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.ref.WeakReference;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -48,7 +43,7 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 
 /**
- * Utility class that deals with operations with an ImageView.
+ * Utility class that deals with operations with an bitmap.
  */
 final class BitmapUtils {
 
@@ -76,7 +71,7 @@ final class BitmapUtils {
      */
     static int getRotationByExif(Context context, Uri uri) {
         try {
-            File file = getFileFromUri(context, uri);
+            File file = FileUtils.getFileFromUri(context, uri);
             if (file.exists()) {
                 ExifInterface ei = new ExifInterface(file.getAbsolutePath());
                 return getRotationByExif(ei);
@@ -94,8 +89,11 @@ final class BitmapUtils {
         return 0;
     }
 
+
     /**
-     * Get bitmap rotation by given Exif value
+     * Get image rotation by given Exif value
+     * @param exif ExifInterface
+     * @return rotation
      */
     public static int getRotationByExif(ExifInterface exif) {
         int degrees;
@@ -117,6 +115,11 @@ final class BitmapUtils {
         return degrees;
     }
 
+    /**
+     * get rotation by file's exif
+     * @param filePath input file path
+     * @return rotation
+     */
     private static int getRotationByExif(String filePath) {
         int orientation = 0;
         try {
@@ -144,6 +147,25 @@ final class BitmapUtils {
             e.printStackTrace();
         }
         return orientation;
+    }
+
+    /**
+     * Get {@link ExifInterface} orientation from given rotation
+     * @param rotation given rotation
+     * @return one of {@link ExifInterface#ORIENTATION_NORMAL}, {@link ExifInterface#ORIENTATION_ROTATE_90}
+     *          {@link ExifInterface#ORIENTATION_ROTATE_180}, {@link ExifInterface#ORIENTATION_ROTATE_270}
+     */
+    public static int getExifOrientationFromRotation(int rotation) {
+        switch (rotation) {
+            case 90:
+                return ExifInterface.ORIENTATION_ROTATE_90;
+            case 180:
+                return ExifInterface.ORIENTATION_ROTATE_180;
+            case 270:
+                return ExifInterface.ORIENTATION_ROTATE_270;
+            default:
+                return ExifInterface.ORIENTATION_NORMAL;
+        }
     }
 
     public static Bitmap scaleBitmap(Bitmap bm) {
@@ -190,6 +212,12 @@ final class BitmapUtils {
         }
     }
 
+    /**
+     * Compress input bitmap with specific jpeg quality
+     * @param bm input bitmap
+     * @param jpegQuality ouput jpeg quality
+     * @return compressed bitmap
+     */
     public static Bitmap compressBitmap(Bitmap bm, int jpegQuality) {
         if (jpegQuality > 0 && jpegQuality <= 100) {
             ByteArrayOutputStream obj = new ByteArrayOutputStream();
@@ -200,22 +228,18 @@ final class BitmapUtils {
         return bm;
     }
 
-    public static Bitmap createRotatedBitmap(Bitmap bm, float rotation) {
-        matrix.reset();
-        matrix.postRotate(rotation, bm.getWidth() / 2, bm.getHeight() / 2);
-        try {
-            Bitmap result = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-            return result;
-        } catch (OutOfMemoryError e) {
-            return null;
-        }
-    }
-
+    /**
+     * Decode input byte array to bitmap
+     * @param data input byte array
+     * @param rotationDegree use in case of input bytes come from camera
+     * @return output bitmap
+     */
+    @Nullable
     public static Bitmap decodeByteArray(byte[] data, float rotationDegree) {
         try {
             Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
             if (rotationDegree != 0) {
-                bm = createRotatedBitmap(bm, rotationDegree);
+                bm = rotateBitmap(bm, rotationDegree);
             }
             return bm;
         } catch (OutOfMemoryError e) {
@@ -224,6 +248,15 @@ final class BitmapUtils {
         }
     }
 
+    /**
+     * decode input byte array to scaled bitmap
+     * @param data input bytes array
+     * @param rotationDegree use in case of input bytes come from camera
+     * @param maxWidth maximum width limit
+     * @param maxHeight maximum height linmit
+     * @return output Bitmap
+     */
+    @Nullable
     public static Bitmap decodeByteArrayToScaledBitmap(byte[] data, float rotationDegree, int maxWidth, int maxHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -248,19 +281,36 @@ final class BitmapUtils {
 
         Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length, options);
         if (rotationDegree != 0) {
-            bm = createRotatedBitmap(bm, rotationDegree);
+            bm = rotateBitmap(bm, rotationDegree);
         }
-        int w = bm.getWidth();
-        int h = bm.getHeight();
-        Log.d("TAG_CAMERA", "ImageTools->Created bitmap: " + w + ", " + h);
+        if (bm != null) {
+            int w = bm.getWidth();
+            int h = bm.getHeight();
+            Log.d("TAG_CAMERA", "ImageTools->Created bitmap: " + w + ", " + h);
+        }
         return bm;
     }
 
+    /**
+     * Decode image file to byte array
+     * @param file input file
+     * @param maxWidth maximum width limit
+     * @param maxHeight maximum height linmit
+     * @return output bytes
+     */
     public static byte[] decodeImageFileToByArray(@NonNull File file, int jpegQuality, int maxWidth, int maxHeight) {
         Bitmap bm = decodeFileToScaledBitmap(file, 0, maxWidth, maxHeight);
         return getByteArrayFromBitmap(bm, jpegQuality);
     }
 
+    /**
+     * Decode image file to bitmap
+     * @param file input file
+     * @param deviceRotation device rotation showing bitmap right rotation as user see
+     * @param maxWidth maximum width limit
+     * @param maxHeight maximum height linmit
+     * @return output Bitmap
+     */
     public static Bitmap decodeFileToScaledBitmap(@NonNull File file, int deviceRotation, int maxWidth, int maxHeight) {
         int fileRotation = getRotationByExif(file.getPath());
         Log.d(TAG, "loading file..." + file.length() / 1024 + "KB, Orientation: " + fileRotation);
@@ -295,7 +345,7 @@ final class BitmapUtils {
             fileRotation = (fileRotation + deviceRotation) % 360;
             if (fileRotation != 0) {
                 Log.d(TAG, "ImageTools->Rotating: " + fileRotation);
-                bm = createRotatedBitmap(bm, fileRotation);
+                bm = rotateBitmap(bm, fileRotation);
             }
             if (bm != null) {
                 int w = bm.getWidth();
@@ -309,6 +359,39 @@ final class BitmapUtils {
             return decodeFileToScaledBitmap(file, deviceRotation, maxWidth - 400, maxHeight - 400);
         } catch (Exception e1) {
             e1.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Save a bitmap to temporary file
+     * @param bm input bitmap
+     * @param jpegQuality jpeg quality, from 1 to 100
+     * @param rotation image rotation
+     * @return temporary file, null if false to create temp file or save bitmap
+     */
+    public static File saveBitmapToTempFile(Bitmap bm, int jpegQuality, int rotation) {
+        try {
+            File f = FileUtils.createTemporaryImageFile();
+            if (f != null) {
+                FileOutputStream out = new FileOutputStream(f);
+                bm.compress(Bitmap.CompressFormat.JPEG, jpegQuality, out);
+                out.flush();
+                out.close();
+
+                // save exif orientation info
+                try {
+                    ExifInterface exif = new ExifInterface(f.getCanonicalPath());
+                    exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(getExifOrientationFromRotation(rotation)));
+                    exif.saveAttributes();
+                } catch (IOException ignored) {
+                    ignored.printStackTrace();
+                }
+                return f;
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
             return null;
         }
     }
@@ -588,7 +671,7 @@ final class BitmapUtils {
         if (result != null) {
             try {
                 // rotate the decoded region by the required amount
-                result = rotateBitmapInt(result, degreesRotated);
+                result = rotateBitmap(result, degreesRotated);
 
                 // rotating by 0, 90, 180 or 270 degrees doesn't require extra cropping
                 if (degreesRotated % 90 != 0) {
@@ -786,53 +869,26 @@ final class BitmapUtils {
     }
 
     /**
-     * Get {@link File} object for the given Android URI.<br>
-     * Use content resolver to get real path if direct path doesn't return valid file.
-     */
-    private static File getFileFromUri(Context context, Uri uri) {
-
-        // first try by direct path
-        File file = new File(uri.getPath());
-        if (file.exists()) {
-            return file;
-        }
-
-        // try reading real path from content resolver (gallery images)
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(uri, proj, null, null, null);
-            context.getContentResolver().openInputStream(uri);
-            if (cursor != null) {
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                String realPath = cursor.getString(column_index);
-                file = new File(realPath);
-            }
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        return file;
-    }
-
-    /**
      * Rotate the given bitmap by the given degrees.<br>
      * New bitmap is created and the old one is recycled.
+     * @param bitmap input bitmap
+     * @param degrees given rotation degree
+     * @return output bitmap, null if meet {@link OutOfMemoryError}
      */
-    private static Bitmap rotateBitmapInt(Bitmap bitmap, int degrees) {
+    @Nullable
+    private static Bitmap rotateBitmap(Bitmap bitmap, float degrees) {
         if (degrees > 0) {
             Matrix matrix = new Matrix();
             matrix.setRotate(degrees);
-            Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
-            if (newBitmap != bitmap) {
-                bitmap.recycle();
+            try {
+                Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+                if (newBitmap != bitmap) {
+                    bitmap.recycle();
+                }
+                return newBitmap;
+            } catch (OutOfMemoryError error) {
+                return null;
             }
-            return newBitmap;
         } else {
             return bitmap;
         }
