@@ -8,7 +8,7 @@ Download
 
 Gradle:
 
-Add the JitPack repository to your project level gralde file
+Add the JitPack repository to your project level 's gralde file
 
 ```groovy
 allprojects {
@@ -18,7 +18,7 @@ allprojects {
 }
 ```
   
-Add the dependency
+Add the dependency to modul 's gradle file
 
 ```groovy
 compile 'com.github.duyp:android-utils:1.0.6'
