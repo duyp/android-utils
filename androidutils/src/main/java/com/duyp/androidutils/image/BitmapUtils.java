@@ -45,7 +45,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
 /**
  * Utility class that deals with operations with an bitmap.
  */
-final class BitmapUtils {
+public final class BitmapUtils {
 
     private static final int MAX_WIDTH = 1500;
     private static final int MAX_HEIGHT = 1500;
