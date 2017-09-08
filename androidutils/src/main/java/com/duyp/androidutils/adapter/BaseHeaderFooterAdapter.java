@@ -16,8 +16,8 @@ import java.util.List;
 
 public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int TYPE_HEADER = 11;
-    private static final int TYPE_FOOTER = 12;
+    private static final int TYPE_HEADER = 1;
+    private static final int TYPE_FOOTER = 2;
     protected static final int TYPE_NON_FOOTER_HEADER = -1;
 
     private List<View> headers = new ArrayList<>();
@@ -26,13 +26,23 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (isHeaderOrFooter(viewType)) {
-            return HeaderFooterViewHolder.createInstance(parent);
+            return createHeaderFooterViewHolder(parent);
         } else {
             return createHolder(parent, viewType);
         }
     }
 
     protected abstract RecyclerView.ViewHolder createHolder(ViewGroup parent, int viewType);
+
+    /**
+     * Create view holder for header and footer
+     * Override this method for custom header footer View Holder
+     * @param parent parent view group (e.g recyclerView)
+     * @return instance of {@link HeaderFooterViewHolder}
+     */
+    protected HeaderFooterViewHolder createHeaderFooterViewHolder(ViewGroup parent) {
+        return SimpleHeaderFooterViewHolder.createInstance(parent);
+    }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -51,15 +61,7 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
     private void bindHeaderFooter(HeaderFooterViewHolder vh, View view) {
         //empty out our FrameLayout and replace with our header/footer
         if (view != null) {
-            vh.base.removeAllViews();
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                    , ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.gravity = Gravity.CENTER_HORIZONTAL;
-            if (view.getLayoutParams() != null) {
-                params.height = view.getLayoutParams().height;
-                params.width = view.getLayoutParams().width;
-            }
-            vh.base.addView(view, params);
+            vh.bindView(view);
         }
     }
 
@@ -149,8 +151,17 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
         return footers;
     }
 
+    public static abstract class HeaderFooterViewHolder extends RecyclerView.ViewHolder{
+
+        public HeaderFooterViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public abstract void bindView(View view);
+    }
+
     //our header/footer RecyclerView.ViewHolder is just a FrameLayout
-    private static class HeaderFooterViewHolder extends RecyclerView.ViewHolder {
+    private static class SimpleHeaderFooterViewHolder extends HeaderFooterViewHolder {
 
         static HeaderFooterViewHolder createInstance(ViewGroup parent) {
             //create a new framelayout, or inflate from a resource
@@ -160,14 +171,27 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT)
             );
-            return new HeaderFooterViewHolder(frameLayout);
+            return new SimpleHeaderFooterViewHolder(frameLayout);
         }
 
         FrameLayout base;
 
-        HeaderFooterViewHolder(View itemView) {
+        SimpleHeaderFooterViewHolder(View itemView) {
             super(itemView);
             this.base = (FrameLayout) itemView;
+        }
+
+        @Override
+        public void bindView(View view) {
+            base.removeAllViews();
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                    , ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.gravity = Gravity.CENTER_HORIZONTAL;
+            if (view.getLayoutParams() != null) {
+                params.height = view.getLayoutParams().height;
+                params.width = view.getLayoutParams().width;
+            }
+            base.addView(view, params);
         }
     }
 }
