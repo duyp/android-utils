@@ -19,6 +19,14 @@ public class AlertUtils {
 
     private static final String TAG = "AlertUtils";
 
+    private static String cActionOK = "OK";
+    private static String cActionCancel = "Cancel";
+
+    public static void initActionText(@NonNull String ok, @NonNull String cancel) {
+        cActionOK = ok;
+        cActionCancel = cancel;
+    }
+
     public static void showConfirmDialog(Context context, String message, DialogInterface.OnClickListener positiveListener) {
         showConfirmDialog(context, null, message, positiveListener, null);
     }
@@ -35,7 +43,7 @@ public class AlertUtils {
     public static void showConfirmDialog(Context context, @Nullable String title, String message,
                                          DialogInterface.OnClickListener positiveListener,
                                          @Nullable DialogInterface.OnClickListener negativeListener) {
-        showAlertDialog(context, title, message, context.getString(R.string.dialog_yes), context.getString(R.string.dialog_no),
+        showAlertDialog(context, title, message, cActionOK, cActionCancel,
                 positiveListener, negativeListener);
     }
 
@@ -48,11 +56,11 @@ public class AlertUtils {
     }
 
     public static void showAlertDialog(Context context, String title, String message, DialogInterface.OnClickListener listener) {
-        showAlertDialog(context, title, message, context.getString(R.string.dialog_ok), listener);
+        showAlertDialog(context, title, message, cActionOK, listener);
     }
 
     public static void showAlertDialog(Context context, String message, DialogInterface.OnClickListener listener) {
-        createAlertDialogBuilderInternal(context, message, context.getString(R.string.dialog_ok), listener)
+        createAlertDialogBuilderInternal(context, message, cActionOK, listener)
                 .show();
     }
 
@@ -89,7 +97,6 @@ public class AlertUtils {
                 .setPositiveButton(positiveButton, positiveListener)
                 .setCancelable(false);
     }
-
 
     public static void showToastLongMessage(Context context, String message) {
         if (context != null)
