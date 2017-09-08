@@ -3,12 +3,14 @@ package com.duyp.androidutils;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -24,10 +26,26 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by duypham on 9/7/17.
+ * Common utilities
  */
 
 public class CommonUtils {
 
+    /**
+     * Get activity from given context
+     * @param context context
+     * @return activity if given context or its base context is instance of activity, null if not
+     */
+    public static Activity getActivityFromContext(@NonNull Context context) {
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity)context;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
+        }
+        return null;
+    }
+    
     public static Point getScreenSize(Activity activity) {
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -45,7 +63,7 @@ public class CommonUtils {
 
     public static void hideSoftKeyboard(Context context) {
         try {
-            Activity activity = ContextUtils.getActivityFromContext(context);
+            Activity activity = getActivityFromContext(context);
             if (activity != null) {
                 hideSoftKeyboard(activity);
             }
