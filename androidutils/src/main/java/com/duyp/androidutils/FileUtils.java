@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.v4.content.FileProvider;
@@ -12,7 +13,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by duypham on 6/26/17.
@@ -20,6 +23,42 @@ import java.util.ArrayList;
  */
 
 public class FileUtils {
+
+    /**
+     * Get {@link File} object for the given Android URI.<br>
+     * Use content resolver to get real path if direct path doesn't return valid file.
+     * Note: not work for android N
+     */
+    public static File getFileFromUri(Context context, Uri uri) {
+
+        // first try by direct path
+        File file = new File(uri.getPath());
+        if (file.exists()) {
+            return file;
+        }
+
+        // try reading real path from content resolver (gallery images)
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            context.getContentResolver().openInputStream(uri);
+            if (cursor != null) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                String realPath = cursor.getString(column_index);
+                file = new File(realPath);
+            }
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return file;
+    }
 
     public static Uri getUriFromFile(Context context, File file) {
         Uri fileUri;
@@ -108,6 +147,12 @@ public class FileUtils {
         return bytesResult;
     }
 
+    /**
+     * Get human readable byte count
+     * @param bytes input byte size
+     * @param si use SI mode (10^3 = 1000 instead of 2^10 = 1024)
+     * @return size represented text
+     */
     public static String getHumanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
         if (bytes < unit) return bytes + " B";
@@ -116,6 +161,30 @@ public class FileUtils {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
+    /**
+     * Create temporary image file in external pictures directory
+     * @return temp file
+     * @throws IOException exception
+     */
+    public static File createTemporaryImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        return image;
+    }
+
+    /**
+     * Get all images path from storage
+     * @param context context
+     * @return list of image paths
+     */
     public static ArrayList<String> getImagesPath(Context context) {
         Uri uri;
         ArrayList<String> listOfAllImages = new ArrayList<String>();
