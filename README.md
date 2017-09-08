@@ -8,7 +8,7 @@ Download
 
 Gradle:
 
-Add the JitPack repository to your project level 's gralde file
+Add the JitPack repository to your project level 's gradle file
 
 ```groovy
 allprojects {
