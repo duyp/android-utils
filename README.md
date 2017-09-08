@@ -1,14 +1,14 @@
 Android-Utils
 ========
 
-Combination of common Android Utils
+Combination of common Android Utils used in almost adroid projects
 
 Download
 --------
 
 Gradle:
 
-Add the JitPack repository to your project level gralde file
+Add the JitPack repository to your project level 's gradle file
 
 ```groovy
 allprojects {
@@ -18,10 +18,10 @@ allprojects {
 }
 ```
   
-Add the dependency
+Add the dependency to modul 's gradle file
 
 ```groovy
-compile 'com.github.duyp:android-utils:1.0.3'
+compile 'com.github.duyp:android-utils:1.0.6'
 ```
 
 License
