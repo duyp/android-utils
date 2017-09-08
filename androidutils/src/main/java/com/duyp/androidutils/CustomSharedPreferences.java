@@ -21,6 +21,9 @@ public class CustomSharedPreferences {
 
     public static CustomSharedPreferences getInstance(Context context) {
         if (mInstance == null) {
+            // IMPORTANCE: use getApplication context to prevent memory leak when store context instance as static field
+            // Since application context is instance of application and lives as long as application
+            // Thus store application context as static field is SAFE.
             mInstance = new CustomSharedPreferences(context.getApplicationContext());
         }
         return mInstance;
