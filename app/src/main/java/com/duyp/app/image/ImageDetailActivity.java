@@ -13,6 +13,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.duyp.androidutils.image.glide.loader.GlideLoader;
+import com.duyp.androidutils.image.glide.loader.TransitionGlideLoader;
 import com.duyp.app.R;
 
 import static com.duyp.app.image.GlideTestActivity.*;
@@ -33,5 +35,8 @@ public class ImageDetailActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageView.setTransitionName(TRANSITION_NAME_IMAGE);
         }
+
+        GlideLoader loader = new TransitionGlideLoader(this);
+        loader.loadImage(URL, imageView);
     }
 }

@@ -22,7 +22,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
         app:AspectLockedImageView_ratio="@dimen/aspect_ratio_1_2"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/imv"/>

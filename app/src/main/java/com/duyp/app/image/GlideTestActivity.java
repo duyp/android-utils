@@ -10,6 +10,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.duyp.androidutils.image.glide.loader.GlideLoader;
+import com.duyp.androidutils.image.glide.loader.SimpleGlideLoader;
 import com.duyp.androidutils.navigator.ActivityNavigator;
 import com.duyp.app.R;
 
@@ -38,6 +40,9 @@ public class GlideTestActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageView.setTransitionName(TRANSITION_NAME_IMAGE);
         }
+
+        GlideLoader loader = new SimpleGlideLoader(this);
+        loader.loadImage(URL, imageView);
 
         imageView.setOnClickListener(view -> {
             navigator.startActivityWithTransition(ImageDetailActivity.class, intent -> {}, false, false, imageView);
