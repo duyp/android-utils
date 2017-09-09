@@ -131,10 +131,10 @@ public class AlertUtils {
     }
 
     public static void showSnackBarLongMessage(View layout, String message) {
-        showSnackBarInternal(layout, message, null, null, Snackbar.LENGTH_LONG);
+        showSnackBarInternal(layout, message, cActionOK, null, Snackbar.LENGTH_LONG);
     }
 
     public static void showSnackBarShortMessage(View layout, String message) {
-        showSnackBarInternal(layout, message, null, null, Snackbar.LENGTH_SHORT);
+        showSnackBarInternal(layout, message, cActionOK, null, Snackbar.LENGTH_SHORT);
     }
 }
