@@ -25,6 +25,23 @@ allprojects {
     }
 }
 
+ext {
+    configuration = [
+            package          : "com.duyp.app",
+            buildToolsVersion: "26.0.1",
+            compileVersion   : 26,
+            minSdk           : 16,
+            targetSdk        : 26,
+            version_name     : "1.0",
+            version_code     : 1
+    ]
+
+    libraries = [
+            supportVersion   : "26.0.2",
+    ]
+}
+
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

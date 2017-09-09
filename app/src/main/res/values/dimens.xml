@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <item name="aspect_ratio_2_1" format="float" type="dimen">2.0</item>
+    <item name="aspect_ratio_1.5_1" format="float" type="dimen">1.5</item>
+    <item name="aspect_ratio_1_1" format="float" type="dimen">1.0</item>
+    <item name="aspect_ratio_1_2" format="float" type="dimen">0.5</item>
+</resources>

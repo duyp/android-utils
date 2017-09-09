@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">My Libraries</string>
+    <string name="title_activity_glide_test">GlideTestActivity</string>
+
+    <string name="title_activity_image_detail">ImageDetailActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
