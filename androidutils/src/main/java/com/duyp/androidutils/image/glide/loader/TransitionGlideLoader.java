@@ -51,12 +51,12 @@ public class TransitionGlideLoader extends SimpleGlideLoader {
                 .listener(new GlideOnCompleteListener<T, GlideDrawable>() {
                     @Override
                     public void onCompleted(boolean success) {
-                        if (listener != null) {
-                            listener.onCompleted(success);
+                        if (success && listener != null) {
+                            listener.onCompleted(true);
                         }
                         if (!success) {
                             // perform normal loading
-                            TransitionGlideLoader.super.loadImage(source, imageView);
+                            createThumbnail(source).listener(listener).into(imageView);
                         }
                     }
                 }).into(imageView);
