@@ -20,8 +20,14 @@ allprojects {
   
 Add the dependency to modul 's gradle file
 
+* Using [latest release][1]:
 ```groovy
-compile 'com.github.duyp:android-utils:1.2.0'
+compile 'com.github.duyp:android-utils:latest-release-version'
+```
+
+* Using SNAPSHOT version (see [JitPack][2] for documentation):
+```groovy
+compile 'com.github.duyp:android-utils:master-SNAPSHOT'
 ```
 
 License
@@ -40,3 +46,6 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+[1]: https://github.com/duyp/android-utils/releases
+[2]: https://jitpack.io/docs/#snapshots
