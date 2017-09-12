@@ -30,7 +30,7 @@ compile 'com.github.duyp:android-utils:latest-release-version'
 compile 'com.github.duyp:android-utils:master-SNAPSHOT'
 ```
 
-Other options: (https://jitpack.io/v/duyp/android-utils.svg][3]
+Other options: [https://jitpack.io/v/duyp/android-utils.svg][3]
 
 License
 =======
