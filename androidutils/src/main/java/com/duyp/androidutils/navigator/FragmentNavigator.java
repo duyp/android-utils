@@ -3,6 +3,7 @@ package com.duyp.androidutils.navigator;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 /* Copyright 2016 Patrick Löwenstein
@@ -25,4 +26,9 @@ public interface FragmentNavigator extends Navigator {
     void replaceChildFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, Bundle args, String backstackTag);
     void replaceChildFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag);
 
+    @Nullable
+    Fragment findChildFragmentByTag(@NonNull String tag);
+
+    @Nullable
+    Fragment findChildFragmentById(@IdRes int containerId);
 }

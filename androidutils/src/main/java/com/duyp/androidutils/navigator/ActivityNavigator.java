@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -133,7 +134,7 @@ public class ActivityNavigator implements Navigator {
     }
 
     @Override
-    public final void replaceFragment(@IdRes int containerId, Fragment fragment, Bundle args) {
+    public final void replaceFragment(@IdRes int containerId,@NonNull Fragment fragment, Bundle args) {
         replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, null, args, false, null);
     }
 
@@ -143,13 +144,25 @@ public class ActivityNavigator implements Navigator {
     }
 
     @Override
-    public final void replaceFragmentAndAddToBackStack(@IdRes int containerId, Fragment fragment, Bundle args, String backstackTag) {
+    public final void replaceFragmentAndAddToBackStack(@IdRes int containerId,@NonNull Fragment fragment, Bundle args, String backstackTag) {
         replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, null, args, true, backstackTag);
     }
 
     @Override
     public final void replaceFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag) {
         replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, fragmentTag, args, true, backstackTag);
+    }
+
+    @Override
+    @Nullable
+    public Fragment findFragmentByTag(@NonNull String tag) {
+        return activity.getSupportFragmentManager().findFragmentByTag(tag);
+    }
+
+    @Override
+    @Nullable
+    public Fragment findFragmentById(@IdRes int containerId) {
+        return activity.getSupportFragmentManager().findFragmentById(containerId);
     }
 
     protected final void replaceFragmentInternal(FragmentManager fm, @IdRes int containerId, Fragment fragment, String fragmentTag, Bundle args, boolean addToBackstack,  String backstackTag) {
