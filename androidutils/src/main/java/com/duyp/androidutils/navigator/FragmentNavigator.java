@@ -27,8 +27,8 @@ public interface FragmentNavigator extends Navigator {
     void replaceChildFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag);
 
     @Nullable
-    Fragment findChildFragmentByTag(@NonNull String tag);
+    <T extends Fragment> T findChildFragmentByTag(@NonNull String tag);
 
     @Nullable
-    Fragment findChildFragmentById(@IdRes int containerId);
+    <T extends Fragment> T findChildFragmentById(@IdRes int containerId);
 }

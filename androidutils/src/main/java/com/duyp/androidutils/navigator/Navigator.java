@@ -61,8 +61,8 @@ public interface Navigator {
     void replaceFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag);
 
     @Nullable
-    Fragment findFragmentByTag(@NonNull String tag);
+    <T extends Fragment> T findFragmentByTag(@NonNull String tag);
 
     @Nullable
-    Fragment findFragmentById(@IdRes int containerId);
+    <T extends Fragment> T findFragmentById(@IdRes int containerId);
 }

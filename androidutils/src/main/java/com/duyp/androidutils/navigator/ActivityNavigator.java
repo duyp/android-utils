@@ -155,14 +155,16 @@ public class ActivityNavigator implements Navigator {
 
     @Override
     @Nullable
-    public Fragment findFragmentByTag(@NonNull String tag) {
-        return activity.getSupportFragmentManager().findFragmentByTag(tag);
+    public <T extends Fragment> T findFragmentByTag(@NonNull String tag) {
+        // noinspection unchecked
+        return (T) activity.getSupportFragmentManager().findFragmentByTag(tag);
     }
 
     @Override
     @Nullable
-    public Fragment findFragmentById(@IdRes int containerId) {
-        return activity.getSupportFragmentManager().findFragmentById(containerId);
+    public <T extends Fragment> T findFragmentById(@IdRes int containerId) {
+        // noinspection unchecked
+        return (T)activity.getSupportFragmentManager().findFragmentById(containerId);
     }
 
     protected final void replaceFragmentInternal(FragmentManager fm, @IdRes int containerId, Fragment fragment, String fragmentTag, Bundle args, boolean addToBackstack,  String backstackTag) {

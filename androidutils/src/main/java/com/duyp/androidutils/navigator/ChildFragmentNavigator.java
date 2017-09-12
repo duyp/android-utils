@@ -50,13 +50,15 @@ public class ChildFragmentNavigator extends ActivityNavigator implements Fragmen
 
     @Override
     @Nullable
-    public Fragment findChildFragmentByTag(@NonNull String tag) {
-        return this.fragment.getChildFragmentManager().findFragmentByTag(tag);
+    public <T extends Fragment> T findChildFragmentByTag(@NonNull String tag) {
+        // noinspection unchecked
+        return (T) this.fragment.getChildFragmentManager().findFragmentByTag(tag);
     }
 
     @Override
     @Nullable
-    public Fragment findChildFragmentById(@IdRes int containerId) {
-        return this.fragment.getChildFragmentManager().findFragmentById(containerId);
+    public <T extends Fragment> T findChildFragmentById(@IdRes int containerId) {
+        // noinspection unchecked
+        return (T) this.fragment.getChildFragmentManager().findFragmentById(containerId);
     }
 }
