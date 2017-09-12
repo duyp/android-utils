@@ -5,6 +5,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 /* Copyright 2017 Patrick Löwenstein
  *
@@ -29,22 +30,27 @@ public class ChildFragmentNavigator extends ActivityNavigator implements Fragmen
     }
 
     @Override
-    public final void replaceChildFragment(@IdRes int containerId, @NonNull Fragment fragment, Bundle args) {
+    public void replaceChildFragment(@IdRes int containerId, @NonNull Fragment fragment, View... transitionViews) {
+        replaceFragmentInternal(this.fragment.getChildFragmentManager(), containerId, fragment, null, null, false, null);
+    }
+
+    @Override
+    public final void replaceChildFragment(@IdRes int containerId, @NonNull Fragment fragment, Bundle args, View... transitionViews) {
         replaceFragmentInternal(this.fragment.getChildFragmentManager(), containerId, fragment, null, args, false, null);
     }
 
     @Override
-    public final void replaceChildFragment(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args) {
+    public final void replaceChildFragment(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, View... transitionViews) {
         replaceFragmentInternal(this.fragment.getChildFragmentManager(), containerId, fragment, fragmentTag, args, false, null);
     }
 
     @Override
-    public final void replaceChildFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, Bundle args, String backstackTag) {
+    public final void replaceChildFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, Bundle args, String backstackTag, View... transitionViews) {
         replaceFragmentInternal(this.fragment.getChildFragmentManager(), containerId, fragment, null, args, true, backstackTag);
     }
 
     @Override
-    public final void replaceChildFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag) {
+    public final void replaceChildFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag, View... transitionViews) {
         replaceFragmentInternal(this.fragment.getChildFragmentManager(), containerId, fragment, fragmentTag, args, true, backstackTag);
     }
 

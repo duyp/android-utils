@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.IdRes;
@@ -134,23 +135,28 @@ public class ActivityNavigator implements Navigator {
     }
 
     @Override
-    public final void replaceFragment(@IdRes int containerId,@NonNull Fragment fragment, Bundle args) {
-        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, null, args, false, null);
+    public void replaceFragment(@IdRes int containerId, @NonNull Fragment fragment, View... transitionViews) {
+        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, null, null, false, null, transitionViews);
     }
 
     @Override
-    public final void replaceFragment(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args) {
-        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, fragmentTag, args, false, null);
+    public final void replaceFragment(@IdRes int containerId,@NonNull Fragment fragment, Bundle args, View... transitionViews) {
+        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, null, args, false, null, transitionViews);
     }
 
     @Override
-    public final void replaceFragmentAndAddToBackStack(@IdRes int containerId,@NonNull Fragment fragment, Bundle args, String backstackTag) {
-        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, null, args, true, backstackTag);
+    public final void replaceFragment(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, View... transitionViews) {
+        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, fragmentTag, args, false, null, transitionViews);
     }
 
     @Override
-    public final void replaceFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag) {
-        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, fragmentTag, args, true, backstackTag);
+    public final void replaceFragmentAndAddToBackStack(@IdRes int containerId,@NonNull Fragment fragment, Bundle args, String backstackTag, View... transitionViews) {
+        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, null, args, true, backstackTag, transitionViews);
+    }
+
+    @Override
+    public final void replaceFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag, View... transitionViews) {
+        replaceFragmentInternal(activity.getSupportFragmentManager(), containerId, fragment, fragmentTag, args, true, backstackTag, transitionViews);
     }
 
     @Override
@@ -167,9 +173,18 @@ public class ActivityNavigator implements Navigator {
         return (T)activity.getSupportFragmentManager().findFragmentById(containerId);
     }
 
-    protected final void replaceFragmentInternal(FragmentManager fm, @IdRes int containerId, Fragment fragment, String fragmentTag, Bundle args, boolean addToBackstack,  String backstackTag) {
+    protected final void replaceFragmentInternal(FragmentManager fm, @IdRes int containerId, Fragment fragment, String fragmentTag, Bundle args, boolean addToBackstack,  String backstackTag, View... transitionViews) {
         if(args != null) { fragment.setArguments(args);}
-        FragmentTransaction ft = fm.beginTransaction().replace(containerId, fragment, fragmentTag);
+        FragmentTransaction ft = fm.beginTransaction();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            for (View view : transitionViews) {
+                if (view != null && view.getTransitionName() != null) {
+                    ft.addSharedElement(view, view.getTransitionName());
+                }
+            }
+        }
+        ft.replace(containerId, fragment, fragmentTag);
         if(addToBackstack) {
             ft.addToBackStack(backstackTag).commit();
             fm.executePendingTransactions();

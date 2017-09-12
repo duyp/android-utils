@@ -55,10 +55,11 @@ public interface Navigator {
     void startActivityForResult(@NonNull Class<? extends Activity> activityClass, @NonNull String arg, int requestCode);
     void startActivityForResult(@NonNull Class<? extends Activity> activityClass, int arg, int requestCode);
 
-    void replaceFragment(@IdRes int containerId, @NonNull Fragment fragment, Bundle args);
-    void replaceFragment(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args);
-    void replaceFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, Bundle args, String backstackTag);
-    void replaceFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag);
+    void replaceFragment(@IdRes int containerId, @NonNull Fragment fragment, View... transitionViews);
+    void replaceFragment(@IdRes int containerId, @NonNull Fragment fragment, Bundle args, View... transitionViews);
+    void replaceFragment(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, View... transitionViews);
+    void replaceFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, Bundle args, String backstackTag, View... transitionViews);
+    void replaceFragmentAndAddToBackStack(@IdRes int containerId, @NonNull Fragment fragment, @NonNull String fragmentTag, Bundle args, String backstackTag, View... transitionViews);
 
     @Nullable
     <T extends Fragment> T findFragmentByTag(@NonNull String tag);
