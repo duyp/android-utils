@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
@@ -11,6 +12,7 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.duyp.androidutils.functions.PlainConsumer;
 import com.duyp.androidutils.image.glide.GlideOnCompleteListener;
 import com.duyp.androidutils.image.glide.GlideUtils;
 import com.duyp.androidutils.view.DimensionUtils;
@@ -29,14 +31,14 @@ public class SimpleGlideLoader implements GlideLoader {
 
     protected RequestManager mRequestManager;
 
-    private Context mContext;
+    protected Context mContext;
 
     /**
      * if true (default), loader will use fixed size thumbnail {@link GlideUtils#THUMBNAIL_SIZE}
      * else, loader will use size multiplier, default is 0.1f
      */
     @Setter
-    protected boolean useFixedSizeThumbnail = true;
+    protected boolean useFixedSizeThumbnail = false;
 
     @Setter
     protected float thumbnailMultiplier = DEFAULT_THUMBNAIL_MULTIPLIER;
@@ -80,17 +82,32 @@ public class SimpleGlideLoader implements GlideLoader {
     }
 
     public <T> void loadImage(T source, ImageView imageView) {
-        loadImage(source, imageView, null);
+        loadImage(source, imageView, null, null);
     }
 
     @Override
-    public <T> void loadImage(T source, ImageView imageView, GlideOnCompleteListener<T, GlideDrawable> listener) {
-        createThumbnail(source)
-                .listener(listener)
+    public <T> void loadImage(T source, ImageView imageView, PlainConsumer<Boolean> completeConsumer) {
+        loadImage(source, imageView, null, completeConsumer);
+    }
+
+    @Override
+    public <T> void loadImage(T source, ImageView imageView, PlainConsumer<Boolean> thumbnailConsumer, PlainConsumer<Boolean> fullConsumer) {
+        loadImageInternal(source, imageView, thumbnailConsumer, fullConsumer);
+    }
+
+    protected <T> void loadImageInternal(T source, ImageView imageView, @Nullable PlainConsumer<Boolean> thumbnailConsumer,
+                                         @Nullable PlainConsumer<Boolean> fullConsumer) {
+        createThumbnail(source, thumbnailConsumer)
+                .listener(fullConsumer == null ? null : new GlideOnCompleteListener<T, GlideDrawable>() {
+                    @Override
+                    public void onCompleted(boolean success) {
+                        fullConsumer.accept(success);
+                    }
+                })
                 .into(imageView);
     }
 
-    protected  <T> DrawableRequestBuilder<T> createThumbnail(T source) {
+    protected  <T> DrawableRequestBuilder<T> createThumbnail(T source, @Nullable PlainConsumer<Boolean> completeConsumer) {
         DrawableRequestBuilder<T> requestBuilder = GlideUtils.createFullRequestBuilder(mRequestManager, source);
         if (useFixedSizeThumbnail) {
             requestBuilder.thumbnail(GlideUtils.createThumbRequestBuilder(mRequestManager, source, thumbnailSizePx));
@@ -100,6 +117,12 @@ public class SimpleGlideLoader implements GlideLoader {
         if (placeHolderRes != -1) {
             requestBuilder.placeholder(placeHolderRes);
         }
-        return requestBuilder;
+
+        return requestBuilder.listener(completeConsumer == null ? null : new GlideOnCompleteListener<T, GlideDrawable>() {
+            @Override
+            public void onCompleted(boolean success) {
+                completeConsumer.accept(success);
+            }
+        });
     }
 }
