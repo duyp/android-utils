@@ -11,6 +11,7 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.duyp.androidutils.functions.PlainConsumer;
@@ -25,6 +26,7 @@ public final class GlideUtils {
 
     public static final int THUMBNAIL_SIZE = 256;
     public static final float THUMBNAIL_MULTIPLIER = 0.1f;
+    public static final DiskCacheStrategy DEFAULT_DISK_CACHE_STRATEGY = DiskCacheStrategy.ALL;
 
     // not allow create instance of this class
     private GlideUtils() {}
@@ -47,7 +49,7 @@ public final class GlideUtils {
      * @param imageView destination image
      */
     public static <T> void loadImage(Context context, T source, ImageView imageView, float sizeMultiplier) {
-        createFullRequestBuilder(context, source)
+        createRequestBuilder(context, source)
                 .thumbnail(sizeMultiplier)
                 .into(imageView);
     }
@@ -59,11 +61,11 @@ public final class GlideUtils {
      * @param imageView destination image
      */
     public static <T> void loadImageNoThumbnail(Context context, T source, ImageView imageView) {
-        createFullRequestBuilder(context, source).into(imageView);
+        createRequestBuilder(context, source).into(imageView);
     }
 
     public static <T> void loadImageDrawableResource(Context context, @DrawableRes int drawableRes, ImageView imageView) {
-        createFullRequestBuilder(context, null)
+        createRequestBuilder(context, null)
                 .placeholder(drawableRes)
                 .into(imageView);
     }
@@ -118,15 +120,7 @@ public final class GlideUtils {
      * @param <T> type of image source
      */
     public static <T> void loadImageBitmap(Context context, T source, PlainConsumer<Bitmap> consumer) {
-        Glide.with(context).load(source)
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        consumer.accept(resource);
-                    }
-                });
+        loadImageBitmap(context, source, -1, -1, consumer);
     }
 
     /**
@@ -141,6 +135,7 @@ public final class GlideUtils {
     public static <T> void loadImageBitmap(Context context, T source, @Px int outSizeW, @Px int outSizeH, PlainConsumer<Bitmap> consumer) {
         Glide.with(context).load(source)
                 .asBitmap()
+                .diskCacheStrategy(DEFAULT_DISK_CACHE_STRATEGY)
                 .into(new SimpleTarget<Bitmap>(outSizeW, outSizeH) {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -149,6 +144,8 @@ public final class GlideUtils {
                 });
     }
 
+
+    ///////////////////////////////////// REQUEST BUILDER //////////////////////////////////////////
     /**
      * Create a request builder to load full image from image source
      * @param requestManager request manager
@@ -156,11 +153,11 @@ public final class GlideUtils {
      * @param <T> type or source (String, File, Uri..)
      * @return instance of {@link DrawableRequestBuilder}
      */
-    public static<T> DrawableRequestBuilder<T> createFullRequestBuilder(RequestManager requestManager, T source) {
+    public static<T> DrawableRequestBuilder<T> createRequestBuilder(RequestManager requestManager, T source) {
         return requestManager
                 .load(source)
                 .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
+                .diskCacheStrategy(DEFAULT_DISK_CACHE_STRATEGY);
     }
 
     /**
@@ -170,23 +167,12 @@ public final class GlideUtils {
      * @param <T> type or source (String, File, Uri..)
      * @return instance of {@link DrawableRequestBuilder}
      */
-    public static <T> DrawableRequestBuilder<T> createFullNoNetworkRequestBuilder(RequestManager requestManager, T source) {
+    public static <T> DrawableRequestBuilder<T> createNoNetworkRequestBuilder(RequestManager requestManager, T source) {
         return requestManager
                 .using(new GlideNetworkDisablingLoader<T>())
                 .load(source)
                 .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
-    }
-
-    /**
-     * Create a request builder to load thumbnail image (with default specific size to deal with shared element transitions)
-     * @param requestManager request manager
-     * @param source image source (url for file, uri..)
-     * @param <T> type or source (String, File, Uri..)
-     * @return instance of {@link DrawableRequestBuilder}
-     */
-    public static <T> DrawableRequestBuilder<T> createThumbRequestBuilder(RequestManager requestManager, T source) {
-        return createThumbRequestBuilder(requestManager, source, THUMBNAIL_SIZE);
+                .diskCacheStrategy(DEFAULT_DISK_CACHE_STRATEGY);
     }
 
     /**
@@ -197,11 +183,8 @@ public final class GlideUtils {
      * @return instance of {@link DrawableRequestBuilder}
      */
     public static <T> DrawableRequestBuilder<T> createThumbRequestBuilder(RequestManager requestManager, T source, @Px int thumbSizePx) {
-        return requestManager
-                .load(source)
-                .override(thumbSizePx, thumbSizePx)
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        return createRequestBuilder(requestManager, source)
+                .override(thumbSizePx, thumbSizePx);
     }
 
     /**
@@ -211,8 +194,8 @@ public final class GlideUtils {
      * @param <T> type or source (String, File, Uri..)
      * @return instance of {@link DrawableRequestBuilder}
      */
-    public static<T> DrawableRequestBuilder<T> createFullRequestBuilder(Context context, T source) {
-        return createFullRequestBuilder(Glide.with(context), source);
+    public static<T> DrawableRequestBuilder<T> createRequestBuilder(Context context, T source) {
+        return createRequestBuilder(Glide.with(context), source);
     }
 
     /**
@@ -222,19 +205,8 @@ public final class GlideUtils {
      * @param <T> type or source (String, File, Uri..)
      * @return instance of {@link DrawableRequestBuilder}
      */
-    public static <T> DrawableRequestBuilder<T> createFullNoNetworkRequestBuilder(Context context, T source) {
-        return createFullNoNetworkRequestBuilder(Glide.with(context), source);
-    }
-
-    /**
-     * Create a request builder to load thumbnail image (with default specific size to deal with shared element transitions)
-     * @param context context
-     * @param source image source (url for file, uri..)
-     * @param <T> type or source (String, File, Uri..)
-     * @return instance of {@link DrawableRequestBuilder}
-     */
-    public static <T> DrawableRequestBuilder<T> createThumbRequestBuilder(Context context, T source) {
-        return createThumbRequestBuilder(Glide.with(context), source);
+    public static <T> DrawableRequestBuilder<T> createNoNetworkRequestBuilder(Context context, T source) {
+        return createNoNetworkRequestBuilder(Glide.with(context), source);
     }
 
     /**
@@ -247,4 +219,7 @@ public final class GlideUtils {
     public static <T> DrawableRequestBuilder<T> createThumbRequestBuilder(Context context, T source, @Px int thumbSizePx) {
         return createThumbRequestBuilder(Glide.with(context), source, thumbSizePx);
     }
+
+    ///////////////////////////////////// END REQUEST BUILDER //////////////////////////////////////////
+
 }

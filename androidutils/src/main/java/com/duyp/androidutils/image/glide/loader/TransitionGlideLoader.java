@@ -45,9 +45,9 @@ public class TransitionGlideLoader extends SimpleGlideLoader {
      * if image is'nt cached, perform normal loading with thumbnail placeholder
      */
     @Override
-    public <T> void loadImage(T source, ImageView imageView, @Nullable PlainConsumer<Boolean> thumbnailConsumer,
-                                         @Nullable PlainConsumer<Boolean> fullConsumer) {
-        GlideUtils.createFullNoNetworkRequestBuilder(mRequestManager, source)
+    public <T> void loadImage(T source, ImageView imageView,
+                              @Nullable PlainConsumer<Boolean> fullConsumer) {
+        GlideUtils.createNoNetworkRequestBuilder(mRequestManager, source)
                 .listener(new GlideOnCompleteListener<T, GlideDrawable>() {
                     @Override
                     public void onCompleted(boolean success) {
@@ -55,7 +55,7 @@ public class TransitionGlideLoader extends SimpleGlideLoader {
                             fullConsumer.accept(true);
                         } else if (!success) {
                             // perform normal loading
-                            loadImageInternal(source, imageView, thumbnailConsumer, fullConsumer);
+                            loadImageInternal(source, imageView, fullConsumer);
                         }
                     }
                 }).into(imageView);

@@ -36,16 +36,6 @@ public interface GlideLoader {
     <T> void loadImage(T source, ImageView imageView, PlainConsumer<Boolean> completeConsumer);
 
     /**
-     * Load image source into an image view with complete consumer
-     * @param source image source (eg. url, file, uri...)
-     * @param imageView target image view
-     * @param thumbnailConsumer consume thumbnail loading complete listener, true if success
-     * @param fullConsumer consume full loading complete listener, true if success
-     * @param <T> type of source (eg. {@link String}, {@link File}, {@link android.net.Uri} ...)
-     */
-    <T> void loadImage(T source, ImageView imageView, PlainConsumer<Boolean> thumbnailConsumer, PlainConsumer<Boolean> fullConsumer);
-
-    /**
      * Load image source into an imageview with progress showing and reloadable
      * @param source image source (eg. url, file, uri...)
      * @param imv target image view
@@ -54,4 +44,15 @@ public interface GlideLoader {
      * @param <T> type of source (eg. {@link String}, {@link File}, {@link android.net.Uri} ...)
      */
     <T> void loadImage(T source, @NonNull ImageView imv, @NonNull ProgressBar pb, @NonNull View reloadView);
+
+    /**
+     * Load image source into an imageview with progress showing and reloadable
+     * @param original original image source (eg. url, file, uri...)
+     * @param thumb thumbnail image source (eg. url, file, uri...)
+     * @param imv target image view
+     * @param pb {@link ProgressBar} to show while loading
+     * @param reloadView clickable reload view
+     * @param <T> type of source (eg. {@link String}, {@link File}, {@link android.net.Uri} ...)
+     */
+    <T> void loadImage(T original, T thumb, @NonNull ImageView imv, @NonNull ProgressBar pb, @NonNull View reloadView);
 }
