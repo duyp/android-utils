@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
@@ -82,7 +85,7 @@ public class SimpleGlideLoader implements GlideLoader {
     }
 
     public <T> void loadImage(T source, ImageView imageView) {
-        loadImage(source, imageView, null, null);
+        loadImage(source, imageView, (PlainConsumer<Boolean>) null, (PlainConsumer<Boolean>) null);
     }
 
     @Override
@@ -93,6 +96,25 @@ public class SimpleGlideLoader implements GlideLoader {
     @Override
     public <T> void loadImage(T source, ImageView imageView, PlainConsumer<Boolean> thumbnailConsumer, PlainConsumer<Boolean> fullConsumer) {
         loadImageInternal(source, imageView, thumbnailConsumer, fullConsumer);
+    }
+
+    @Override
+    public <T> void loadImage(T source, @NonNull ImageView imv, @NonNull ProgressBar pb, @NonNull View reloadView) {
+        pb.setVisibility(View.VISIBLE);
+        reloadView.setVisibility(View.GONE);
+        loadImage(source, imv, success -> {
+            pb.setVisibility(View.GONE);
+            if (!success) {
+                reloadView.setVisibility(View.VISIBLE);
+                if (!reloadView.hasOnClickListeners()) {
+                    reloadView.setOnClickListener(view -> {
+                        loadImage(source, imv, pb, reloadView);
+                    });
+                }
+            } else {
+                reloadView.setVisibility(View.GONE);
+            }
+        });
     }
 
     protected <T> void loadImageInternal(T source, ImageView imageView, @Nullable PlainConsumer<Boolean> thumbnailConsumer,
