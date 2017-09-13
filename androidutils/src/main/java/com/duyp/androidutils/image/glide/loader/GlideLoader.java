@@ -46,7 +46,8 @@ public interface GlideLoader {
     <T> void loadImage(T source, @NonNull ImageView imv, @NonNull ProgressBar pb, @NonNull View reloadView);
 
     /**
-     * Load image source into an imageview with progress showing and reloadable
+     * Load image source into an image view with progress showing and reloadable using thumbnail and full image sources
+     * the thumbnail will be load first as placeholder, follow by full image.
      * @param original original image source (eg. url, file, uri...)
      * @param thumb thumbnail image source (eg. url, file, uri...)
      * @param imv target image view
