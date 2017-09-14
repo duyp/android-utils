@@ -102,6 +102,15 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
+    //add a header at top of adapter
+    public void addHeaderFirst(View header) {
+        if (header != null && !headers.contains(header)) {
+            headers.add(0, header);
+            //animate
+            notifyItemInserted(0);
+        }
+    }
+
     /**
      * remove a header from the adapter
      */
@@ -190,6 +199,10 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
             if (view.getLayoutParams() != null) {
                 params.height = view.getLayoutParams().height;
                 params.width = view.getLayoutParams().width;
+            }
+            ViewGroup parent = (ViewGroup)view.getParent();
+            if (parent != null) {
+                parent.removeView(view);
             }
             base.addView(view, params);
         }
