@@ -120,15 +120,15 @@ public final class GlideUtils {
      * @param <T> type of image source
      */
     public static <T> void loadImageBitmap(Context context, T source, PlainConsumer<Bitmap> consumer) {
-        loadImageBitmap(context, source, -1, -1, consumer);
+        loadImageBitmap(context, source, SimpleTarget.SIZE_ORIGINAL, SimpleTarget.SIZE_ORIGINAL, consumer);
     }
 
     /**
      * Load image bitmap from image source
      * @param context context
      * @param source image source
-     * @param outSizeW output bitmap width, -1 for original size
-     * @param outSizeH output bitmap height, -1 for original size
+     * @param outSizeW output bitmap width,
+     * @param outSizeH output bitmap height,
      * @param consumer bitmap result consummer
      * @param <T> type of image source
      */
