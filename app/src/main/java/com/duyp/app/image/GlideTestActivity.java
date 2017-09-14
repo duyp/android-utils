@@ -47,6 +47,7 @@ public class GlideTestActivity extends AppCompatActivity {
         imageView.setOnClickListener(view -> {
             navigator.startActivityWithTransition(ImageDetailActivity.class, intent -> {}, false, false, imageView);
         });
+
     }
 
 }
