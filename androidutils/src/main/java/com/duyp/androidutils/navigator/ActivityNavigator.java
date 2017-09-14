@@ -14,9 +14,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.transition.Fade;
 import android.util.Pair;
 import android.view.View;
 
+import com.duyp.androidutils.animation.DetailFragmentTransition;
 import com.duyp.androidutils.functions.PlainConsumer;
 import com.duyp.androidutils.view.TransitionHelper;
 
@@ -178,9 +180,13 @@ public class ActivityNavigator implements Navigator {
         FragmentTransaction ft = fm.beginTransaction();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            for (View view : transitionViews) {
-                if (view != null && view.getTransitionName() != null) {
-                    ft.addSharedElement(view, view.getTransitionName());
+            if (transitionViews != null && transitionViews.length > 0) {
+                fragment.setSharedElementEnterTransition(new DetailFragmentTransition());
+                fragment.setEnterTransition(new Fade());
+                for (View view : transitionViews) {
+                    if (view != null && view.getTransitionName() != null) {
+                        ft.addSharedElement(view, view.getTransitionName());
+                    }
                 }
             }
         }
