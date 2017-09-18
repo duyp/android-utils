@@ -144,7 +144,7 @@ public class ImageZoomHelper {
                     zoomableView.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (dialog != null) {
+                            if (dialog != null && zoomableView != null) {
 //                                if (Build.VERSION.SDK_INT >= 16) {
 //                                    placeholderView.setBackground(null);
 //                                } else {
@@ -344,13 +344,9 @@ public class ImageZoomHelper {
 
             final View finalZoomView = zoomableView;
             zoomableView.setDrawingCacheEnabled(false);
-            zoomableView.post(new Runnable() {
-                @Override
-                public void run() {
-                    dismissDialog();
-
-                    finalZoomView.invalidate();
-                }
+            zoomableView.post(() -> {
+                dismissDialog();
+                finalZoomView.invalidate();
             });
         } else {
             dismissDialog();
