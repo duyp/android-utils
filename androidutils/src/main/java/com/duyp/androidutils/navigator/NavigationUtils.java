@@ -5,14 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
 
 import com.duyp.androidutils.FileUtils;
 import com.duyp.androidutils.R;
+import com.duyp.androidutils.functions.PlainConsumer;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +27,13 @@ import java.io.IOException;
  */
 
 public class NavigationUtils {
+
+    public static <T extends Fragment> T createFragmentInstance(@NonNull T fragment, @NonNull PlainConsumer<Bundle> bundleConsumer) {
+        Bundle bundle = new Bundle();
+        bundleConsumer.accept(bundle);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     /**
      * Open google map app with custom query
