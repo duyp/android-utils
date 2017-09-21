@@ -13,28 +13,37 @@ public class CustomSharedPreferences {
     /**
      * FEILD OF CLASS *
      */
+    private String mPrefName = PREFS_NAME;
     private SharedPreferences mSharedPre;
     private SharedPreferences.Editor mEditor;
     private Context mContext;
 
     private static CustomSharedPreferences mInstance;
 
-    public static CustomSharedPreferences getInstance(Context context) {
+    public static CustomSharedPreferences getInstance(Context context, String prefName) {
+        if (mInstance != null && !mInstance.mPrefName.equals(prefName)) {
+            mInstance = null;
+        }
         if (mInstance == null) {
             // IMPORTANCE: use getApplication context to prevent memory leak when store context instance as static field
             // Since application context is instance of application and lives as long as application
             // Thus store application context as static field is SAFE.
-            mInstance = new CustomSharedPreferences(context.getApplicationContext());
+            mInstance = new CustomSharedPreferences(context.getApplicationContext(), prefName);
         }
         return mInstance;
     }
 
+    public static CustomSharedPreferences getInstance(Context context) {
+        return getInstance(context, PREFS_NAME);
+    }
+
     @SuppressLint("CommitPrefEdits")
-    public CustomSharedPreferences(final Context context) {
+    public CustomSharedPreferences(final Context context, String prefName) {
         mContext = context;
+        mPrefName = prefName;
         if (null != context) {
             if (mSharedPre == null) {
-                mSharedPre = context.getSharedPreferences(PREFS_NAME, 0);
+                mSharedPre = context.getSharedPreferences(mPrefName, 0);
             }
 
             mEditor = mSharedPre.edit();
@@ -44,10 +53,14 @@ public class CustomSharedPreferences {
         }
     }
 
+    public CustomSharedPreferences(final Context context) {
+        this(context, PREFS_NAME);
+    }
+
     @SuppressLint("CommitPrefEdits")
     private void refresh() {
         if (null != mContext) {
-            mSharedPre = mContext.getSharedPreferences(PREFS_NAME, 0);
+            mSharedPre = mContext.getSharedPreferences(mPrefName, 0);
             mEditor = mSharedPre.edit();
         } else {
             mEditor = null;
