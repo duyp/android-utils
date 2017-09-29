@@ -12,11 +12,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.AndroidRuntimeException;
-import android.util.Log;
 
 import com.duyp.androidutils.FileUtils;
 import com.duyp.androidutils.R;
-import com.duyp.androidutils.functions.PlainConsumer;
+import com.duyp.androidutils.rx.functions.PlainConsumer;
 
 import java.io.File;
 import java.io.IOException;

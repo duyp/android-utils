@@ -2,7 +2,7 @@ package com.duyp.androidutils.animation;
 
 import android.animation.Animator;
 
-import com.duyp.androidutils.functions.PlainConsumer;
+import com.duyp.androidutils.rx.functions.PlainConsumer;
 
 /**
  * Created by phamd on 6/22/2017.

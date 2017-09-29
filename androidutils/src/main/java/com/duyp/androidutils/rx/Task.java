@@ -1,4 +1,4 @@
-package co.asktutor.app.util;
+package com.duyp.androidutils.rx;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

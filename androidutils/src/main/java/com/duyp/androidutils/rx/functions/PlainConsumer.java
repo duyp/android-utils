@@ -15,7 +15,7 @@
  * FILE CHANGED 2017 Tailored Media GmbH
  */
 
-package com.duyp.androidutils.functions;
+package com.duyp.androidutils.rx.functions;
 
 import android.support.annotation.NonNull;
 

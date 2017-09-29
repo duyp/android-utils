@@ -1,4 +1,4 @@
-package com.duyp.androidutils.functions;
+package com.duyp.androidutils.rx.functions;
 
 import io.reactivex.functions.Action;
 
