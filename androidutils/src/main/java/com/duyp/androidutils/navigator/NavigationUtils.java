@@ -105,6 +105,10 @@ public class NavigationUtils {
         activity.startActivityForResult(photoPickerIntent, requestCode);
     }
 
+    public static void openBrowser(Context context, String url) {
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+    }
+
     /**
      * Open gallery image pick
      * @param activity host activity
