@@ -105,6 +105,11 @@ public class NavigationUtils {
         activity.startActivityForResult(photoPickerIntent, requestCode);
     }
 
+    /**
+     * Open an url on browser
+     * @param context context
+     * @param url url to be opened
+     */
     public static void openBrowser(Context context, String url) {
         context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
