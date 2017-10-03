@@ -15,17 +15,21 @@
  * FILE CHANGED 2017 Tailored Media GmbH
  */
 
-package com.duyp.androidutils.functions;
+package com.duyp.androidutils.rx.functions;
 
-import io.reactivex.functions.Function;
+import android.support.annotation.NonNull;
 
+import io.reactivex.functions.Consumer;
 
-public interface PlainFunction<T, R> extends Function<T, R> {
+/**
+ * Like {@link Consumer} but without Exception
+ * @param <T>
+ */
+public interface PlainConsumer<T> extends Consumer<T> {
     /**
-     * Apply some calculation to the input value and return some other value.
-     * @param t the input value
-     * @return the output value
+     * Consume the given value.
+     * @param t the value
      */
     @Override
-    R apply(T t);
+    void accept(@NonNull T t);
 }

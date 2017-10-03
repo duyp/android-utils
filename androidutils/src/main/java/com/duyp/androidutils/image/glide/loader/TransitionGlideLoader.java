@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.duyp.androidutils.functions.PlainConsumer;
+import com.duyp.androidutils.rx.functions.PlainConsumer;
 import com.duyp.androidutils.image.glide.GlideOnCompleteListener;
 import com.duyp.androidutils.image.glide.GlideUtils;
 

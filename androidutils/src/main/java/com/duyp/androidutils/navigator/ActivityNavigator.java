@@ -19,7 +19,7 @@ import android.util.Pair;
 import android.view.View;
 
 import com.duyp.androidutils.animation.DetailFragmentTransition;
-import com.duyp.androidutils.functions.PlainConsumer;
+import com.duyp.androidutils.rx.functions.PlainConsumer;
 import com.duyp.androidutils.view.TransitionHelper;
 
 /* Copyright 2016 Patrick Löwenstein

@@ -5,9 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.duyp.androidutils.functions.PlainConsumer;
-import com.duyp.androidutils.image.glide.GlideOnCompleteListener;
+import com.duyp.androidutils.rx.functions.PlainConsumer;
 
 import java.io.File;
 

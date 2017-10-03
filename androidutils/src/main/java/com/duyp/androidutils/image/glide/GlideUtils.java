@@ -11,10 +11,9 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.duyp.androidutils.functions.PlainConsumer;
+import com.duyp.androidutils.rx.functions.PlainConsumer;
 import com.duyp.androidutils.image.glide.loader.GlideNetworkDisablingLoader;
 
 /**
