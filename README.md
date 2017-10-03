@@ -22,7 +22,13 @@ Add the dependency to modul 's gradle file
 
 * Using [latest release][1]:
 ```groovy
-compile 'com.github.duyp:android-utils:latest-release-version'
+compile 'com.github.duyp:android-utils:core:latest-release-version' // core (basic | common utils)
+compile 'com.github.duyp:android-utils:image:latest-release-version' // Image utils (glide, bitmap...)
+compile 'com.github.duyp:android-utils:navigation:latest-release-version' // Navigation utils
+compile 'com.github.duyp:android-utils:network:latest-release-version' // Network utils (SSL / TLS and x509TrustManager)
+compile 'com.github.duyp:android-utils:adapter:latest-release-version' // RecyclerView Adapters
+compile 'com.github.duyp:android-utils:animation:latest-release-version' // Animation utils (YoYo...)
+compile 'com.github.duyp:android-utils:rx:latest-release-version' // Rx utils (custom functions, task helper...)
 ```
 
 * Using SNAPSHOT version (see [JitPack][2] for documentation):
