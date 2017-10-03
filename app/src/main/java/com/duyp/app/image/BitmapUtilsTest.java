@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.duyp.androidutils.image.BitmapUtils;
-import com.duyp.androidutils.navigator.NavigationUtils;
+import com.duyp.androidutils.navigation.NavigationUtils;
 import com.duyp.app.BasePermissionActivity;
 import com.duyp.app.R;
 

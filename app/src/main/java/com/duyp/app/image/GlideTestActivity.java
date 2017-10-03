@@ -8,11 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.duyp.androidutils.image.glide.loader.GlideLoader;
 import com.duyp.androidutils.image.glide.loader.SimpleGlideLoader;
-import com.duyp.androidutils.navigator.ActivityNavigator;
+import com.duyp.androidutils.navigation.ActivityNavigator;
 import com.duyp.app.R;
 
 

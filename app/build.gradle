@@ -38,7 +38,7 @@ dependencies {
     compile project(':rx')
     compile project(':image')
     compile project(':view')
-
+    compile project(':navigation')
 
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
 
