@@ -14,10 +14,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 
 import com.duyp.androidutils.R;
-import com.duyp.androidutils.animation.CustomAccelerateInterpolator;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -470,5 +470,20 @@ public class ImageZoomHelper {
 
         void onImageZoomEnded(View view);
 
+    }
+
+    private class CustomAccelerateInterpolator extends AccelerateInterpolator {
+
+        private final float mFactor;
+
+        public CustomAccelerateInterpolator(float factor) {
+            mFactor = factor;
+        }
+
+        @Override
+        public float getInterpolation(float input) {
+            // y = ax^2
+            return mFactor * (float)Math.pow(input, 2);
+        }
     }
 }

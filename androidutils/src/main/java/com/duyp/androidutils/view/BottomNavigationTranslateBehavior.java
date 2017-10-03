@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
-import com.duyp.androidutils.animation.AnimationConstants;
-
 /**
  * Created by Nikola D. on 3/15/2016.
  * info show/hide the bottom view when scrolling
@@ -148,14 +146,14 @@ public final class BottomNavigationTranslateBehavior<V extends View> extends Ver
     private void animateTabsHolder(int offset) {
         if (mTabsHolder != null) {
             offset = offset > 0 ? 0 : 1;
-            ViewCompat.animate(mTabsHolder).alpha(offset).setDuration(AnimationConstants.DURATION_SHORT_EXTRA).start();
+            ViewCompat.animate(mTabsHolder).alpha(offset).setDuration(Constants.DURATION_SHORT_EXTRA).start();
         }
     }
 
     private void ensureOrCancelAnimator(V child) {
         if (mOffsetValueAnimator == null) {
             mOffsetValueAnimator = ViewCompat.animate(child);
-            mOffsetValueAnimator.setDuration(AnimationConstants.DURATION_SHORT_EXTRA);
+            mOffsetValueAnimator.setDuration(Constants.DURATION_SHORT_EXTRA);
             mOffsetValueAnimator.setInterpolator(INTERPOLATOR);
         } else {
             mOffsetValueAnimator.cancel();
