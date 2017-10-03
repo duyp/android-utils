@@ -1,15 +1,21 @@
 package com.duyp.androidutils.network;
 
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.security.cert.*;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.PKIXParameters;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * A custom X509TrustManager implementation that trusts a specified server certificate in addition
@@ -48,7 +54,7 @@ public class CustomTrustManager implements X509TrustManager {
      * No-op. Never invoked by client, only used in server-side implementations
      * @return
      */
-    public void checkClientTrusted(X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
+    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
     }
 
 
@@ -61,9 +67,9 @@ public class CustomTrustManager implements X509TrustManager {
      * Defers to the default trust manager first, checks the cert supplied in the ctor if that fails.
      * @param chain the server's certificate chain
      * @param authType the authentication type based on the client certificate
-     * @throws java.security.cert.CertificateException
+     * @throws CertificateException
      */
-    public void checkServerTrusted(X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
+    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         try {
             originalX509TrustManager.checkServerTrusted(chain, authType);
         } catch(CertificateException originalException) {
