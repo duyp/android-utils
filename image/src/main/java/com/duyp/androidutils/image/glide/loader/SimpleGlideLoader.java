@@ -15,12 +15,10 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.duyp.androidutils.DimensionUtils;
 import com.duyp.androidutils.image.PlainConsumer;
 import com.duyp.androidutils.image.glide.GlideOnCompleteListener;
 import com.duyp.androidutils.image.glide.GlideUtils;
-import com.duyp.androidutils.view.DimensionUtils;
-
-import lombok.Setter;
 
 /**
  * Created by duypham on 9/9/17.
@@ -40,15 +38,12 @@ public class SimpleGlideLoader implements GlideLoader {
      * if true (default), loader will use fixed size thumbnail {@link GlideUtils#THUMBNAIL_SIZE}
      * else, loader will use size multiplier, default is 0.1f
      */
-    @Setter
     protected boolean useFixedSizeThumbnail = false;
 
-    @Setter
     protected float thumbnailMultiplier = DEFAULT_THUMBNAIL_MULTIPLIER;
 
     protected int thumbnailSizePx;
 
-    @Setter
     @DrawableRes
     protected int placeHolderRes = -1;
 
@@ -82,6 +77,18 @@ public class SimpleGlideLoader implements GlideLoader {
         if (dp > 0) {
             thumbnailSizePx = DimensionUtils.dpToPx(mContext, dp);
         }
+    }
+
+    public void setUseFixedSizeThumbnail(boolean useFixedSizeThumbnail) {
+        this.useFixedSizeThumbnail = useFixedSizeThumbnail;
+    }
+
+    public void setThumbnailMultiplier(float thumbnailMultiplier) {
+        this.thumbnailMultiplier = thumbnailMultiplier;
+    }
+
+    public void setPlaceHolderRes(int placeHolderRes) {
+        this.placeHolderRes = placeHolderRes;
     }
 
     public <T> void loadImage(T source, ImageView imageView) {
