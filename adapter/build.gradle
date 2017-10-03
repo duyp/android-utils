@@ -34,7 +34,6 @@ android {
 }
 
 dependencies {
-    // Rx
-    compile "io.reactivex.rxjava2:rxandroid:${libs.rxAndroidVersion}"
-    compile "io.reactivex.rxjava2:rxjava:${libs.rxJavaVersion}"
+    compile "com.android.support:recyclerview-v7:${libs.supportVersion}"
+    compile "com.android.support:appcompat-v7:${libs.supportVersion}"
 }
