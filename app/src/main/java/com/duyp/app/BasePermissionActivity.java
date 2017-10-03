@@ -6,17 +6,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.duyp.androidutils.AlertUtils;
-import com.duyp.androidutils.functions.PlainAction;
-import com.duyp.androidutils.functions.PlainConsumer;
 import com.duyp.androidutils.navigator.NavigationUtils;
+import com.duyp.androidutils.rx.Rx;
+import com.duyp.androidutils.rx.functions.PlainAction;
+import com.duyp.androidutils.rx.functions.PlainConsumer;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import co.asktutor.app.base.rx.PlainConsumer;
-import co.asktutor.app.base.rx.Rx;
 import io.reactivex.disposables.Disposable;
 
 /**
  * Created by phamd on 8/10/2017.
+ *
  */
 
 public abstract class BasePermissionActivity extends AppCompatActivity {

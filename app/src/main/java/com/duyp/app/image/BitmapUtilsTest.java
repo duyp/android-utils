@@ -1,5 +1,6 @@
 package com.duyp.app.image;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 
 import com.duyp.androidutils.image.BitmapUtils;
 import com.duyp.androidutils.navigator.NavigationUtils;
+import com.duyp.app.BasePermissionActivity;
 import com.duyp.app.R;
 
 /**
@@ -16,7 +18,7 @@ import com.duyp.app.R;
  *
  */
 
-public class BitmapUtilsTest extends AppCompatActivity{
+public class BitmapUtilsTest extends BasePermissionActivity{
 
     ImageView imageView;
 
@@ -25,11 +27,12 @@ public class BitmapUtilsTest extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_glide_loader);
 
-        imageView = findViewById(R.id.imvImage);
-
-        imageView.setOnClickListener(view -> {
-            NavigationUtils.openGalleryImagePickerForResult(this, 12);
-        });
+        requestPermission(() -> {
+            imageView = findViewById(R.id.imvImage);
+            imageView.setOnClickListener(view -> {
+                NavigationUtils.openGalleryImagePickerForResult(this, 12);
+            });
+        }, true, this::finish, Manifest.permission.WRITE_EXTERNAL_STORAGE,  Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
     @Override
