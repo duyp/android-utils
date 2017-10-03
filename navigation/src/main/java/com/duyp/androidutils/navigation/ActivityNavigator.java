@@ -1,4 +1,4 @@
-package com.duyp.androidutils.navigator;
+package com.duyp.androidutils.navigation;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -211,7 +211,7 @@ public class ActivityNavigator implements Navigator {
                                             boolean includeNestedChildren, boolean includeStatusBar, View... views) {
         Intent intent = new Intent(activity, activityClass);
         consumer.accept(intent);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && views != null && views.length > 0) {
             try {
                 Pair[] pairs = TransitionHelper.getPairsFromViews(includeNestedChildren, views);

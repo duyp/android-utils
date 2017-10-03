@@ -1,4 +1,4 @@
-package com.duyp.androidutils.navigator;
+package com.duyp.androidutils.navigation;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;

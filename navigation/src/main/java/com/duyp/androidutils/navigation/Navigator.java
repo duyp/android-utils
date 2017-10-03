@@ -1,4 +1,4 @@
-package com.duyp.androidutils.navigator;
+package com.duyp.androidutils.navigation;
 
 import android.app.Activity;
 import android.content.Intent;

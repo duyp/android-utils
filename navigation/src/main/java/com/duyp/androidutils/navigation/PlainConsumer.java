@@ -15,7 +15,7 @@
  * FILE CHANGED 2017 Tailored Media GmbH
  */
 
-package com.duyp.androidutils.navigator;
+package com.duyp.androidutils.navigation;
 
 import android.support.annotation.NonNull;
 

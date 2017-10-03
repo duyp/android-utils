@@ -1,4 +1,4 @@
-package com.duyp.androidutils.navigator;
+package com.duyp.androidutils.navigation;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;

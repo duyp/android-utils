@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">navigation</string>
+    <string name="format_google_map_intent_uri" formatted="true" translatable="false">geo:%s?q=%s(%s)</string>
+</resources>

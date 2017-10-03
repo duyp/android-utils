@@ -1,4 +1,4 @@
-package com.duyp.androidutils.navigator;
+package com.duyp.androidutils.navigation;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.util.AndroidRuntimeException;
 
 import com.duyp.androidutils.FileUtils;
-import com.duyp.androidutils.R;
 
 import java.io.File;
 import java.io.IOException;
