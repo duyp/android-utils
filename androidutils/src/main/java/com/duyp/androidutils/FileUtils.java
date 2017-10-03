@@ -1,12 +1,16 @@
 package com.duyp.androidutils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
@@ -24,11 +28,44 @@ import java.util.Date;
 
 public class FileUtils {
 
+
+    /**
+     * Handles V19 and up uri's
+     * @param context context
+     * @param contentUri uri
+     * @return path
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @Nullable
+    public static String getFilePathForV19AndUp(Context context, Uri contentUri) {
+        String wholeID = DocumentsContract.getDocumentId(contentUri);
+
+        // Split at colon, use second item in the array
+        String id = wholeID.split(":")[1];
+        String[] column = { MediaStore.Images.Media.DATA };
+
+        // where id is equal to
+        String sel = MediaStore.Images.Media._ID + "=?";
+        Cursor cursor = context.getContentResolver().
+                query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        column, sel, new String[]{ id }, null);
+
+        String filePath = null;
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex(column[0]);
+            if (cursor.moveToFirst()) {
+                filePath = cursor.getString(columnIndex);
+            }
+            cursor.close();
+        }
+        return filePath;
+    }
+
     /**
      * Get {@link File} object for the given Android URI.<br>
      * Use content resolver to get real path if direct path doesn't return valid file.
-     * Note: not work for android N
      */
+    @Nullable
     public static File getFileFromUri(Context context, Uri uri) {
 
         // first try by direct path
@@ -57,7 +94,15 @@ public class FileUtils {
             }
         }
 
-        return file;
+        if (file.exists()) {
+            return file;
+        } else {
+            String path = getFilePathForV19AndUp(context, uri);
+            if (path != null) {
+                return new File(path);
+            }
+        }
+        return null;
     }
 
     /**

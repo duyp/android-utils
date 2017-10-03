@@ -5,4 +5,6 @@
     <string name="title_activity_image_detail">ImageDetailActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="alert_permission_open_app_setting">Open app setting to enable needed permission</string>
+    <string name="alert_permission_not_granted">Permission Denied, need to be enabled!</string>
 </resources>

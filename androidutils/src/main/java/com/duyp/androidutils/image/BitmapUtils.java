@@ -69,10 +69,10 @@ public final class BitmapUtils {
      * If no rotation is required the image will not be rotated.<br>
      * New bitmap is created and the old one is recycled.
      */
-    static int getRotationByExif(Context context, Uri uri) {
+    public static int getRotationByExif(Context context, Uri uri) {
         try {
             File file = FileUtils.getFileFromUri(context, uri);
-            if (file.exists()) {
+            if (file != null && file.exists()) {
                 ExifInterface ei = new ExifInterface(file.getAbsolutePath());
                 return getRotationByExif(ei);
             } else {
@@ -262,24 +262,7 @@ public final class BitmapUtils {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(data, 0, data.length, options);
 
-        int reqWidth = options.outWidth;
-        int reqHeight = options.outHeight;
-
-        float ratio = (float) options.outWidth / options.outHeight;
-        if (reqWidth >= maxWidth && reqWidth > reqHeight) {
-            reqWidth = maxWidth;
-            reqHeight = (int) (reqWidth / ratio);
-        } else if (reqHeight >= maxHeight && reqHeight > reqWidth) {
-            reqHeight = maxHeight;
-            reqWidth = (int) (reqHeight * ratio);
-        }
-//		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        options.inScaled = true;
-        options.inDensity = options.outWidth;
-        options.inTargetDensity = reqWidth;
-
-        Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+        Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length, getScaledOptions(options, maxWidth, maxHeight));
         if (rotationDegree != 0) {
             bm = rotateBitmap(bm, rotationDegree);
         }
@@ -289,6 +272,60 @@ public final class BitmapUtils {
             Log.d("TAG_CAMERA", "ImageTools->Created bitmap: " + w + ", " + h);
         }
         return bm;
+    }
+
+    /**
+     * Decode a given URI image to bitmap
+     * @param context context
+     * @param uri image uri
+     * @param deviceRotation rotation of device, for showing right orientation
+     * @param maxWidth maximum width limitation
+     * @param maxHeight maximun height limitation
+     * @return bitmap, null if can't read uri or in case of any exception
+     */
+    @Nullable
+    public static Bitmap decodeUriToScaledBitmap(Context context, @NonNull Uri uri, int deviceRotation, int maxWidth, int maxHeight) {
+        try {
+            long time = SystemClock.elapsedRealtime();
+
+            // open input stream
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+
+            // getting exif rotation info
+            int fileRotation = getRotationByExif(context, uri);
+
+            // decode with option
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(inputStream, null, options);
+
+            try {
+                // open stream again
+                inputStream = context.getContentResolver().openInputStream(uri);
+
+                Bitmap bm = BitmapFactory.decodeStream(inputStream, null, getScaledOptions(options, maxWidth, maxHeight));
+                fileRotation = (fileRotation + deviceRotation) % 360;
+                if (fileRotation != 0) {
+                    Log.d(TAG, "ImageTools->Rotating: " + fileRotation);
+                    bm = rotateBitmap(bm, fileRotation);
+                }
+                if (bm != null) {
+                    int w = bm.getWidth();
+                    int h = bm.getHeight();
+                    time = SystemClock.elapsedRealtime() - time;
+                    Log.d(TAG, "ImageTools->Created bitmap: " + w + ", " + h + " in " + time + "ms");
+                }
+                return bm;
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+                return decodeUriToScaledBitmap(context, uri, deviceRotation, maxWidth - 400, maxHeight - 400);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        } catch (FileNotFoundException e) {
+            return null;
+        }
     }
 
     /**
@@ -315,33 +352,13 @@ public final class BitmapUtils {
         int fileRotation = getRotationByExif(file.getPath());
         Log.d(TAG, "loading file..." + file.length() / 1024 + "KB, Orientation: " + fileRotation);
         long time = SystemClock.elapsedRealtime();
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(file.getPath(), options);
 
-        int originWidth = options.outWidth;
-
-        int reqWidth = options.outWidth;
-        int reqHeight = options.outHeight;
-
-        float ratio = (float) options.outWidth / options.outHeight;
-        if (reqWidth >= maxWidth && reqWidth >= reqHeight) {
-            reqWidth = maxWidth;
-            reqHeight = (int) (reqWidth / ratio);
-        } else if (reqHeight >= maxHeight && reqHeight > reqWidth) {
-            reqHeight = maxHeight;
-            reqWidth = (int) (reqHeight * ratio);
-        }
-        Log.d(TAG, "ImageTools->Source w-h: " + originWidth + "," + options.outHeight);
-        Log.d(TAG, "ImageTools->Req w-h: " + reqWidth + "," + reqHeight);
-//		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options = new BitmapFactory.Options();
-        options.inScaled = true;
-        options.inDensity = originWidth;
-        options.inTargetDensity = reqWidth;
-
         try {
-            Bitmap bm = BitmapFactory.decodeFile(file.getPath(), options);
+            Bitmap bm = BitmapFactory.decodeFile(file.getPath(), getScaledOptions(options, maxWidth, maxHeight));
             fileRotation = (fileRotation + deviceRotation) % 360;
             if (fileRotation != 0) {
                 Log.d(TAG, "ImageTools->Rotating: " + fileRotation);
@@ -361,6 +378,30 @@ public final class BitmapUtils {
             e1.printStackTrace();
             return null;
         }
+    }
+
+    public static BitmapFactory.Options getScaledOptions(BitmapFactory.Options decodedOptions, int maxWidth, int maxHeight) {
+        // calculate require with and height
+        int reqWidth = decodedOptions.outWidth;
+        int reqHeight = decodedOptions.outHeight;
+
+        float ratio = (float) decodedOptions.outWidth / decodedOptions.outHeight;
+        if (reqWidth >= maxWidth && reqWidth >= reqHeight) {
+            reqWidth = maxWidth;
+            reqHeight = (int) (reqWidth / ratio);
+        } else if (reqHeight >= maxHeight && reqHeight > reqWidth) {
+            reqHeight = maxHeight;
+            reqWidth = (int) (reqHeight * ratio);
+        }
+        Log.d(TAG, "ImageTools->Source w-h: " + decodedOptions.outWidth + "," + decodedOptions.outHeight);
+        Log.d(TAG, "ImageTools->Req w-h: " + reqWidth + "," + reqHeight);
+//		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        BitmapFactory.Options outputOptions = new BitmapFactory.Options();
+        outputOptions.inScaled = true;
+        outputOptions.inDensity = decodedOptions.outWidth;
+        outputOptions.inTargetDensity = reqWidth;
+        return outputOptions;
     }
 
     /**

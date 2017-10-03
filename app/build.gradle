@@ -46,4 +46,6 @@ dependencies {
     compile "com.android.support:design:${libs.supportVersion}"
     compile "com.android.support:support-v4:${libs.supportVersion}"
     testCompile 'junit:junit:4.12'
+
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 }
