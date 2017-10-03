@@ -6,8 +6,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.duyp.androidutils.R;
-
 
 public class AspectLockedImageView extends AppCompatImageView {
     private float aspectRatio = 0;
@@ -36,8 +34,8 @@ public class AspectLockedImageView extends AppCompatImageView {
         if (localRatio == 0.0) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         } else {
-            int lockedWidth = MeasureSpec.getSize(widthMeasureSpec);
-            int lockedHeight = MeasureSpec.getSize(heightMeasureSpec);
+            int lockedWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+            int lockedHeight = View.MeasureSpec.getSize(heightMeasureSpec);
 
             if (lockedWidth == 0 && lockedHeight == 0) {
                 throw new IllegalArgumentException("Both width and height cannot be 0");
@@ -60,8 +58,8 @@ public class AspectLockedImageView extends AppCompatImageView {
             lockedHeight += vPadding;
 
             // Ask children to follow the new preview dimension.
-            super.onMeasure(MeasureSpec.makeMeasureSpec(lockedWidth, MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(lockedHeight, MeasureSpec.EXACTLY));
+            super.onMeasure(View.MeasureSpec.makeMeasureSpec(lockedWidth, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(lockedHeight, View.MeasureSpec.EXACTLY));
         }
     }
 

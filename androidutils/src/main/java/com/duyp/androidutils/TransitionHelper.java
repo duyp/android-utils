@@ -1,4 +1,4 @@
-package com.duyp.androidutils.view;
+package com.duyp.androidutils;
 
 import android.app.Activity;
 import android.os.Build;

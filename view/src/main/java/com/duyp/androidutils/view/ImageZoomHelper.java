@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 
-import com.duyp.androidutils.R;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;

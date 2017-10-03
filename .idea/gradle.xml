@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/image" />
             <option value="$PROJECT_DIR$/rx" />
+            <option value="$PROJECT_DIR$/view" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,5 +1,8 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.duyp'
 
 def cfg = rootProject.ext.configuration;
 def libs = rootProject.ext.libraries;
@@ -7,13 +10,15 @@ def libs = rootProject.ext.libraries;
 android {
     compileSdkVersion cfg.compileVersion
     buildToolsVersion cfg.buildToolsVersion
+
     defaultConfig {
-        applicationId cfg.package
         minSdkVersion cfg.minSdk
         targetSdkVersion cfg.targetSdk
         versionCode cfg.version_code
         versionName cfg.version_name
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -29,26 +34,5 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    compile project(':androidutils')
-    compile project(':rx')
-    compile project(':image')
-    compile project(':view')
-
-
-    compile "com.android.support:appcompat-v7:${libs.supportVersion}"
-
-    // Glide
-    compile 'com.github.bumptech.glide:glide:3.8.0'
-
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.android.support:design:${libs.supportVersion}"
-    compile "com.android.support:support-v4:${libs.supportVersion}"
-    testCompile 'junit:junit:4.12'
-
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 }

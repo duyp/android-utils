@@ -1,4 +1,4 @@
-package com.duyp.androidutils.view;
+package com.duyp.androidutils.view.behavior;
 
 import android.content.Context;
 import android.os.Build;

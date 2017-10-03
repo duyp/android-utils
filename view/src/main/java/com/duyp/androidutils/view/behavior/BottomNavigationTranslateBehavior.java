@@ -1,4 +1,4 @@
-package com.duyp.androidutils.view;
+package com.duyp.androidutils.view.behavior;
 
 
 import android.content.Context;
@@ -15,6 +15,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+
+import com.duyp.androidutils.view.Constants;
 
 /**
  * Created by Nikola D. on 3/15/2016.

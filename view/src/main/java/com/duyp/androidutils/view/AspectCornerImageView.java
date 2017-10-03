@@ -24,8 +24,7 @@ import android.net.Uri;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
-
-import com.duyp.androidutils.R;
+import android.widget.ImageView;
 
 /**
  * Created by DELL on 3/1/2016.
@@ -40,20 +39,20 @@ public class AspectCornerImageView extends AppCompatImageView {
 
     private int mResource = 0;
 
-    private static final ScaleType[] sScaleTypeArray = {
-            ScaleType.MATRIX,
-            ScaleType.FIT_XY,
-            ScaleType.FIT_START,
-            ScaleType.FIT_CENTER,
-            ScaleType.FIT_END,
-            ScaleType.CENTER,
-            ScaleType.CENTER_CROP,
-            ScaleType.CENTER_INSIDE
+    private static final ImageView.ScaleType[] sScaleTypeArray = {
+            ImageView.ScaleType.MATRIX,
+            ImageView.ScaleType.FIT_XY,
+            ImageView.ScaleType.FIT_START,
+            ImageView.ScaleType.FIT_CENTER,
+            ImageView.ScaleType.FIT_END,
+            ImageView.ScaleType.CENTER,
+            ImageView.ScaleType.CENTER_CROP,
+            ImageView.ScaleType.CENTER_INSIDE
     };
 
     // Set default scale type to FIT_CENTER, which is default scale type of
     // original ImageView.
-    private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private ImageView.ScaleType mScaleType = ImageView.ScaleType.FIT_CENTER;
 
     private float mLeftTopCornerRadius = 0.0f;
     private float mRightTopCornerRadius = 0.0f;
@@ -89,8 +88,8 @@ public class AspectCornerImageView extends AppCompatImageView {
         if (localRatio == 0.0) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         } else {
-            int lockedWidth = MeasureSpec.getSize(widthMeasureSpec);
-            int lockedHeight = MeasureSpec.getSize(heightMeasureSpec);
+            int lockedWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+            int lockedHeight = View.MeasureSpec.getSize(heightMeasureSpec);
 
             if (lockedWidth == 0 && lockedHeight == 0) {
                 try {
@@ -117,8 +116,8 @@ public class AspectCornerImageView extends AppCompatImageView {
             lockedHeight += vPadding;
 
             // Ask children to follow the new preview dimension.
-            super.onMeasure(MeasureSpec.makeMeasureSpec(lockedWidth, MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(lockedHeight, MeasureSpec.EXACTLY));
+            super.onMeasure(View.MeasureSpec.makeMeasureSpec(lockedWidth, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(lockedHeight, View.MeasureSpec.EXACTLY));
         }
     }
 
@@ -226,12 +225,12 @@ public class AspectCornerImageView extends AppCompatImageView {
     }
 
     @Override
-    public ScaleType getScaleType() {
+    public ImageView.ScaleType getScaleType() {
         return mScaleType;
     }
 
     @Override
-    public void setScaleType(ScaleType scaleType) {
+    public void setScaleType(ImageView.ScaleType scaleType) {
         super.setScaleType(scaleType);
         mScaleType = scaleType;
         updateDrawable();
@@ -406,7 +405,7 @@ public class AspectCornerImageView extends AppCompatImageView {
         private ColorStateList mBorderColor = ColorStateList.valueOf(DEFAULT_BORDER_COLOR);
         // Set default scale type to FIT_CENTER, which is default scale type of
         // original ImageView.
-        private ScaleType mScaleType = ScaleType.FIT_CENTER;
+        private ImageView.ScaleType mScaleType = ImageView.ScaleType.FIT_CENTER;
 
         private Path mPath = new Path();
         private Bitmap mBitmap;
@@ -515,21 +514,21 @@ public class AspectCornerImageView extends AppCompatImageView {
             Rect clipBounds = canvas.getClipBounds();
             Matrix canvasMatrix = canvas.getMatrix();
 
-            if (ScaleType.CENTER == mScaleType) {
+            if (ImageView.ScaleType.CENTER == mScaleType) {
                 mBounds.set(clipBounds);
-            } else if (ScaleType.CENTER_CROP == mScaleType) {
+            } else if (ImageView.ScaleType.CENTER_CROP == mScaleType) {
                 applyScaleToRadii(canvasMatrix);
                 mBounds.set(clipBounds);
-            } else if (ScaleType.FIT_XY == mScaleType) {
+            } else if (ImageView.ScaleType.FIT_XY == mScaleType) {
                 Matrix m = new Matrix();
                 m.setRectToRect(mBitmapRect, new RectF(clipBounds), Matrix.ScaleToFit.FILL);
                 mBitmapShader.setLocalMatrix(m);
                 mBounds.set(clipBounds);
-            } else if (ScaleType.FIT_START == mScaleType || ScaleType.FIT_END == mScaleType
-                    || ScaleType.FIT_CENTER == mScaleType || ScaleType.CENTER_INSIDE == mScaleType) {
+            } else if (ImageView.ScaleType.FIT_START == mScaleType || ImageView.ScaleType.FIT_END == mScaleType
+                    || ImageView.ScaleType.FIT_CENTER == mScaleType || ImageView.ScaleType.CENTER_INSIDE == mScaleType) {
                 applyScaleToRadii(canvasMatrix);
                 mBounds.set(mBitmapRect);
-            } else if (ScaleType.MATRIX == mScaleType) {
+            } else if (ImageView.ScaleType.MATRIX == mScaleType) {
                 applyScaleToRadii(canvasMatrix);
                 mBounds.set(mBitmapRect);
             }
@@ -559,11 +558,11 @@ public class AspectCornerImageView extends AppCompatImageView {
                     / (mBounds.height() + mBorderWidth + mBorderWidth);
 
             canvas.scale(newScaleX, newScaleY);
-            if (ScaleType.FIT_START == mScaleType || ScaleType.FIT_END == mScaleType
-                    || ScaleType.FIT_XY == mScaleType || ScaleType.FIT_CENTER == mScaleType
-                    || ScaleType.CENTER_INSIDE == mScaleType || ScaleType.MATRIX == mScaleType) {
+            if (ImageView.ScaleType.FIT_START == mScaleType || ImageView.ScaleType.FIT_END == mScaleType
+                    || ImageView.ScaleType.FIT_XY == mScaleType || ImageView.ScaleType.FIT_CENTER == mScaleType
+                    || ImageView.ScaleType.CENTER_INSIDE == mScaleType || ImageView.ScaleType.MATRIX == mScaleType) {
                 canvas.translate(mBorderWidth, mBorderWidth);
-            } else if (ScaleType.CENTER == mScaleType || ScaleType.CENTER_CROP == mScaleType) {
+            } else if (ImageView.ScaleType.CENTER == mScaleType || ImageView.ScaleType.CENTER_CROP == mScaleType) {
                 // First, make translate values to 0
                 canvas.translate(
                         -translateX / (newScaleX * scaleFactorX),
@@ -737,11 +736,11 @@ public class AspectCornerImageView extends AppCompatImageView {
             mOval = oval;
         }
 
-        public ScaleType getScaleType() {
+        public ImageView.ScaleType getScaleType() {
             return mScaleType;
         }
 
-        public void setScaleType(ScaleType scaleType) {
+        public void setScaleType(ImageView.ScaleType scaleType) {
             if (scaleType == null) {
                 return;
             }

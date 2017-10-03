@@ -18,7 +18,7 @@ import android.transition.Fade;
 import android.util.Pair;
 import android.view.View;
 
-import com.duyp.androidutils.view.TransitionHelper;
+import com.duyp.androidutils.TransitionHelper;
 
 /* Copyright 2016 Patrick Löwenstein
  *

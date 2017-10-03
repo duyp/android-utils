@@ -18,7 +18,6 @@ package com.duyp.androidutils.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -30,8 +29,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
-
-import com.duyp.androidutils.R;
 
 
 /**
@@ -114,7 +111,7 @@ public class ReadMoreTextView extends AppCompatTextView {
     private void updateText(String text, CharSequence expandText) {
         setText(text);
         setMovementMethod(LinkMovementMethod.getInstance());
-        setText(addClickableReadMore(Html.fromHtml(getText().toString()), expandText.toString()), BufferType.SPANNABLE);
+        setText(addClickableReadMore(Html.fromHtml(getText().toString()), expandText.toString()), TextView.BufferType.SPANNABLE);
         setHighlightColor(Color.TRANSPARENT);
     }
 
@@ -145,7 +142,7 @@ public class ReadMoreTextView extends AppCompatTextView {
 
     private void updateViewMoreSpan() {
         setLayoutParams(getLayoutParams());
-        setText(getTag().toString(), BufferType.SPANNABLE);
+        setText(getTag().toString(), TextView.BufferType.SPANNABLE);
         init();
     }
 
