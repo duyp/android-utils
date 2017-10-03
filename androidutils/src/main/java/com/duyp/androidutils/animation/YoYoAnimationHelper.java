@@ -1,5 +1,6 @@
 package com.duyp.androidutils.animation;
 
+import android.animation.Animator;
 import android.view.View;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -30,9 +31,18 @@ public class YoYoAnimationHelper {
     public static void fadeInViewWithListener(final View target, long duration) {
         YoYo.with(Techniques.FadeIn)
                 .duration(duration)
-                .withListener(new SimpleAnimatorListener() {}.onStart(animator -> {
-                    target.setVisibility(View.VISIBLE);
-                }))
+                .withListener(new SimpleAnimatorListener() {
+
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        target.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        target.setVisibility(View.VISIBLE);
+                    }
+                })
                 .playOn(target);
     }
 
@@ -46,9 +56,12 @@ public class YoYoAnimationHelper {
         if (target.getVisibility() == View.VISIBLE) {
             YoYo.with(Techniques.FadeOut)
                     .duration(duration)
-                    .withListener(new SimpleAnimatorListener() {}.onEnd(animator -> {
-                        target.setVisibility(View.INVISIBLE);
-                    }))
+                    .withListener(new SimpleAnimatorListener() {
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            target.setVisibility(View.INVISIBLE);
+                        }
+                    })
                     .playOn(target);
         }
     }

@@ -7,50 +7,25 @@ import android.animation.Animator;
  * Simple implement of animator listener
  */
 
-public abstract class SimpleAnimatorListener implements Animator.AnimatorListener {
+public class SimpleAnimatorListener implements Animator.AnimatorListener {
 
-    private PlainConsumer<Animator> onStart;
-    private PlainConsumer<Animator> onEnd;
-    private PlainConsumer<Animator> onRepeat;
+    @Override
+    public void onAnimationStart(Animator animator) {
 
-    public SimpleAnimatorListener onStart(PlainConsumer<Animator> onStart) {
-        this.onStart = onStart;
-        return this;
-    }
-
-    public SimpleAnimatorListener onEnd(PlainConsumer<Animator> onEnd) {
-        this.onEnd = onEnd;
-        return this;
-    }
-
-    public SimpleAnimatorListener onRepeat(PlainConsumer<Animator> onRepeat) {
-        this.onRepeat = onRepeat;
-        return this;
     }
 
     @Override
-    public void onAnimationStart(Animator animation) {
-        if (onStart != null) {
-            onStart.accept(animation);
-        }
+    public void onAnimationEnd(Animator animator) {
+
     }
 
     @Override
-    public void onAnimationEnd(Animator animation) {
-        if (onEnd != null) {
-            onEnd.accept(animation);
-        }
+    public void onAnimationCancel(Animator animator) {
+        onAnimationEnd(animator);
     }
 
     @Override
-    public void onAnimationCancel(Animator animation) {
-        onAnimationEnd(animation);
-    }
+    public void onAnimationRepeat(Animator animator) {
 
-    @Override
-    public void onAnimationRepeat(Animator animation) {
-        if (onRepeat != null) {
-            onRepeat.accept(animation);
-        }
     }
 }
