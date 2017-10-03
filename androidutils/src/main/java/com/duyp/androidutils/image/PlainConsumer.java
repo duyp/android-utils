@@ -15,21 +15,17 @@
  * FILE CHANGED 2017 Tailored Media GmbH
  */
 
-package com.duyp.androidutils.rx.functions;
+package com.duyp.androidutils.image;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.functions.Consumer;
-
 /**
- * Like {@link Consumer} but without Exception
  * @param <T>
  */
-public interface PlainConsumer<T> extends Consumer<T> {
+public interface PlainConsumer<T> {
     /**
      * Consume the given value.
      * @param t the value
      */
-    @Override
     void accept(@NonNull T t);
 }

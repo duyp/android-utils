@@ -1,11 +1,11 @@
 package com.duyp.androidutils.rx;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import io.reactivex.Completable;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 

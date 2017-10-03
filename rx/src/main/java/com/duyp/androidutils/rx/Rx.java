@@ -1,12 +1,12 @@
 package com.duyp.androidutils.rx;
 
-import android.support.annotation.NonNull;
-
 import com.duyp.androidutils.rx.functions.PlainFunction;
 import com.duyp.androidutils.rx.functions.PlainPredicate;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.annotations.NonNull;
 
 /**
  * Created by duypham on 7/31/17.

@@ -15,7 +15,6 @@ import android.util.AndroidRuntimeException;
 
 import com.duyp.androidutils.FileUtils;
 import com.duyp.androidutils.R;
-import com.duyp.androidutils.rx.functions.PlainConsumer;
 
 import java.io.File;
 import java.io.IOException;

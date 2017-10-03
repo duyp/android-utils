@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.duyp.androidutils.rx.functions.PlainConsumer;
+import com.duyp.androidutils.image.PlainConsumer;
 
 import java.io.File;
 

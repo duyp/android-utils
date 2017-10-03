@@ -1,7 +1,6 @@
 package com.duyp.androidutils.rx.functions;
 
-import android.support.annotation.NonNull;
-
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Predicate;
 
 /**
