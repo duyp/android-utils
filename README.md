@@ -29,6 +29,7 @@ compile "com.github.duyp.android-utils:network:${latest_release_version}" // Net
 compile "com.github.duyp.android-utils:adapter:${latest_release_version}" // RecyclerView Adapters
 compile "com.github.duyp.android-utils:animation:${latest_release_version}" // Animation utils (YoYo...)
 compile "com.github.duyp.android-utils:rx:${latest_release_version}" // Rx utils (custom functions, task helper...)
+compile "com.github.duyp.android-utils:view:${latest_release_version}" // View utils, custom views...
 ```
 
 * Using SNAPSHOT version (see [JitPack][2] for documentation):
