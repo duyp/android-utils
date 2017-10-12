@@ -16,9 +16,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.duyp.androidutils.DimensionUtils;
-import com.duyp.androidutils.image.PlainConsumer;
 import com.duyp.androidutils.image.glide.GlideOnCompleteListener;
 import com.duyp.androidutils.image.glide.GlideUtils;
+import com.duyp.androidutils.rx.functions.PlainConsumer;
 
 /**
  * Created by duypham on 9/9/17.
