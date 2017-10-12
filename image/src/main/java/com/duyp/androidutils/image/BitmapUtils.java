@@ -17,8 +17,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.YuvImage;
+import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.SystemClock;
@@ -915,6 +918,43 @@ public final class BitmapUtils {
         } finally {
             if (decoder != null) {
                 decoder.recycle();
+            }
+        }
+    }
+
+    public static Bitmap cropBitmap(Bitmap bm, Rect r) {
+        return Bitmap.createBitmap(bm, r.left, r.top, r.width(), r.height());
+    }
+
+    /**
+     * decode camera preview frame to bitmap
+     * @param data data
+     */
+    public static Bitmap decodePreviewFrame(byte[] data, Rect region, Camera.Size previewSize, int rotation, int jpegQuality) {
+        ByteArrayOutputStream baos = null;
+        try {
+            YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, previewSize.width, previewSize.height, null);
+            baos = new ByteArrayOutputStream();
+            yuvimage.compressToJpeg(new Rect( 0, 0, previewSize.width, previewSize.height), jpegQuality, baos);
+
+            long time = System.currentTimeMillis();
+            byte[] bytes = baos.toByteArray();
+            Log.d(TAG, "decodePreviewFrame: decoding preview frame: " + FileUtils.getHumanReadableByteCount(bytes.length, false));
+            Bitmap bm = decodeByteArray(bytes, rotation);
+            Bitmap temp = bm;
+            bm = cropBitmap(bm, region);
+            if (temp != null && temp != bm) {
+                temp.recycle();
+            }
+            Log.d(TAG, "decodePreviewFrame: Done: in " + (System.currentTimeMillis() - time) + "ms: " + toString(bm));
+            return bm;
+        } finally {
+            try {
+                if (baos != null) {
+                    baos.close();
+                }
+            } catch (IOException ignored) {
+                ignored.printStackTrace();
             }
         }
     }
