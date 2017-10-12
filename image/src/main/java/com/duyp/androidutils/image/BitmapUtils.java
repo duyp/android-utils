@@ -50,6 +50,7 @@ public final class BitmapUtils {
     private static final int MAX_WIDTH = 1500;
     private static final int MAX_HEIGHT = 1500;
     private static final int DEFAULT_JPEG_QUALITY = 75;
+    private static final float PERCENT_RETRY = 0.1f;
 
     private static final Rect EMPTY_RECT = new Rect();
     private static final String TAG = "BitmapUtils";
@@ -58,11 +59,6 @@ public final class BitmapUtils {
      * Used to know the max texture size allowed to be rendered
      */
     private static int mMaxTextureSize;
-
-    /**
-     * Used to rotate bitmap
-     */
-    private static Matrix matrix = new Matrix();
 
     /**
      * Rotate the given image by reading the Exif value of the image (uri).<br>
@@ -278,7 +274,7 @@ public final class BitmapUtils {
      * Decode a given URI image to bitmap
      * @param context context
      * @param uri image uri
-     * @param deviceRotation rotation of device, for showing right orientation
+     * @param deviceRotation rotation of device, for showing right orientation (regular use for camera image)
      * @param maxWidth maximum width limitation
      * @param maxHeight maximun height limitation
      * @return bitmap, null if can't read uri or in case of any exception
@@ -318,14 +314,29 @@ public final class BitmapUtils {
                 return bm;
             } catch (OutOfMemoryError e) {
                 e.printStackTrace();
-                return decodeUriToScaledBitmap(context, uri, deviceRotation, maxWidth - 400, maxHeight - 400);
+                return decodeUriToScaledBitmap(context, uri, deviceRotation,
+                        maxWidth - (int)(maxWidth * PERCENT_RETRY), maxHeight - (int)(maxHeight * PERCENT_RETRY));
             } catch (Exception e1) {
                 e1.printStackTrace();
                 return null;
+            } finally {
+                closeSafe(inputStream);
             }
         } catch (FileNotFoundException e) {
             return null;
         }
+    }
+
+    /**
+     * Decode image uri to byte array
+     * @param uri input uri
+     * @param maxWidth maximum width limit
+     * @param maxHeight maximum height linmit
+     * @return output bytes
+     */
+    public static byte[] decodeImageUriToScaledByteArray(Context context, @NonNull Uri uri, int jpegQuality, int maxWidth, int maxHeight) {
+        Bitmap bm = decodeUriToScaledBitmap(context, uri, 0, maxWidth, maxHeight);
+        return getByteArrayFromBitmap(bm, jpegQuality);
     }
 
     /**
@@ -335,7 +346,7 @@ public final class BitmapUtils {
      * @param maxHeight maximum height linmit
      * @return output bytes
      */
-    public static byte[] decodeImageFileToByArray(@NonNull File file, int jpegQuality, int maxWidth, int maxHeight) {
+    public static byte[] decodeImageFileToByteArray(@NonNull File file, int jpegQuality, int maxWidth, int maxHeight) {
         Bitmap bm = decodeFileToScaledBitmap(file, 0, maxWidth, maxHeight);
         return getByteArrayFromBitmap(bm, jpegQuality);
     }
@@ -373,7 +384,7 @@ public final class BitmapUtils {
             return bm;
         } catch (OutOfMemoryError e) {
             e.printStackTrace();
-            return decodeFileToScaledBitmap(file, deviceRotation, maxWidth - 400, maxHeight - 400);
+            return decodeFileToScaledBitmap(file, deviceRotation, maxWidth - (int)(maxWidth * PERCENT_RETRY), maxHeight - (int)(maxHeight * PERCENT_RETRY));
         } catch (Exception e1) {
             e1.printStackTrace();
             return null;
@@ -440,7 +451,7 @@ public final class BitmapUtils {
     /**
      * Decode bitmap from stream using sampling to get bitmap with the requested limit.
      */
-    static BitmapSampled decodeSampledBitmap(Context context, Uri uri, int reqWidth, int reqHeight) {
+    public static BitmapSampled decodeSampledBitmap(Context context, Uri uri, int reqWidth, int reqHeight) {
 
         try {
             ContentResolver resolver = context.getContentResolver();
@@ -469,7 +480,7 @@ public final class BitmapUtils {
      * contains the requires rectangle, rotate and then crop again a sub rectangle.<br>
      * If crop fails due to OOM we scale the cropping image by 0.5 every time it fails until it is small enough.
      */
-    static BitmapSampled cropBitmapObjectHandleOOM(Bitmap bitmap, float[] points, int degreesRotated,
+    public static BitmapSampled cropBitmapObjectHandleOOM(Bitmap bitmap, float[] points, int degreesRotated,
                                                    boolean fixAspectRatio, int aspectRatioX, int aspectRatioY) {
         int scale = 1;
         while (true) {
@@ -523,7 +534,7 @@ public final class BitmapUtils {
      * Crop image bitmap from URI by decoding it with specific width and height to down-sample if required.<br>
      * Additionally if OOM is thrown try to increase the sampling (2,4,8).
      */
-    static BitmapSampled cropBitmap(Context context, Uri loadedImageUri, float[] points,
+    public static BitmapSampled cropBitmap(Context context, Uri loadedImageUri, float[] points,
                                     int degreesRotated, int orgWidth, int orgHeight, boolean fixAspectRatio,
                                     int aspectRatioX, int aspectRatioY, int reqWidth, int reqHeight) {
         int sampleMulti = 1;
@@ -839,6 +850,26 @@ public final class BitmapUtils {
             }
         }
         return new BitmapSampled(null, 1);
+    }
+
+    /**
+     * Decode specific rectangle bitmap from byte array
+     *
+     */
+    @Nullable
+    private static Bitmap decodeBitmapRegion(byte[] data, Rect rect) {
+        BitmapRegionDecoder decoder = null;
+        try {
+            decoder = BitmapRegionDecoder.newInstance(data, 0, data.length, false);
+            return decoder.decodeRegion(rect, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (decoder != null) {
+                decoder.recycle();
+            }
+        }
     }
 
     /**
