@@ -39,6 +39,7 @@ dependencies {
     compile project(':image')
     compile project(':view')
     compile project(':navigation')
+    compile project(':glide')
 
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
 
