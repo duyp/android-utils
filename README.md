@@ -18,7 +18,7 @@ allprojects {
 }
 ```
   
-Add the dependency to modul 's gradle file
+Add the dependencies to module 's gradle file
 
 * Using [latest release][1]:
 ```groovy
