@@ -1,7 +1,7 @@
 Android-Utils
 ========
 
-Combination of common Android Utils used in almost adroid projects
+Combination of common Android Utils can be used in almost android projects
 
 Download
 --------
@@ -22,6 +22,7 @@ Add the dependency to modul 's gradle file
 
 * Using [latest release][1]:
 ```groovy
+def latest_release_version = "2.0.2"
 compile "com.github.duyp.android-utils:core:${latest_release_version}" // core (basic | common utils)
 compile "com.github.duyp.android-utils:image:${latest_release_version}" // Image utils (glide, bitmap...)
 compile "com.github.duyp.android-utils:navigation:${latest_release_version}" // Navigation utils
