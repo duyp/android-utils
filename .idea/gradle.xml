@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/image" />
             <option value="$PROJECT_DIR$/navigation" />
             <option value="$PROJECT_DIR$/network" />
+            <option value="$PROJECT_DIR$/realm" />
             <option value="$PROJECT_DIR$/rx" />
             <option value="$PROJECT_DIR$/view" />
           </set>
