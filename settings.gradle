@@ -1,1 +1,1 @@
-include ':app', ':core', ':rx', ':animation', ':image', ':adapter', ':view', ':network', ':navigation', ':realm'
+include ':app', ':core', ':rx', ':animation', ':image', ':adapter', ':view', ':network', ':navigation', ':realm', ':glide'

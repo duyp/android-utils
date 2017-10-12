@@ -1,4 +1,4 @@
-package com.duyp.androidutils.image.glide.loader;
+package com.duyp.androidutils.glide.loader;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.data.DataFetcher;

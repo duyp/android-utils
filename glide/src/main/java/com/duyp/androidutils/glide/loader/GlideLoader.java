@@ -1,4 +1,4 @@
-package com.duyp.androidutils.image.glide.loader;
+package com.duyp.androidutils.glide.loader;
 
 import android.support.annotation.NonNull;
 import android.view.View;

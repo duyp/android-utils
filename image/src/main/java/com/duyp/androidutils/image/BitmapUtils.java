@@ -183,17 +183,27 @@ public final class BitmapUtils {
 
     @Nullable
     public static byte[] getByteArrayFromBitmap(Bitmap bm, int jpegQuality, boolean scaleWithDefaultMaxSize) {
+        Bitmap temp = bm;
         if (scaleWithDefaultMaxSize) {
             bm = scaleBitmap(bm);
         }
-        return getByteArrayFromBitmap(bm, jpegQuality);
+        byte[] bytes = getByteArrayFromBitmap(bm, jpegQuality);
+        if (bm != null && temp != bm) {
+            bm.recycle();
+        }
+        return bytes;
     }
 
     @Nullable
     public static byte[] getByteArrayFromBitmap(Bitmap bm, int jpegQuality, int maxWidth, int maxHeight) {
+        Bitmap temp = bm;
         bm = scaleBitmap(bm, maxWidth, maxHeight);
         Log.d("image_size", "After resize: " + toString(bm));
-        return getByteArrayFromBitmap(bm, jpegQuality);
+        byte[] bytes = getByteArrayFromBitmap(bm, jpegQuality);
+        if (bm != null && temp != bm) {
+            bm.recycle();
+        }
+        return bytes;
     }
 
     @Nullable
@@ -235,7 +245,11 @@ public final class BitmapUtils {
         try {
             Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length);
             if (rotationDegree != 0) {
+                Bitmap temp = bm;
                 bm = rotateBitmap(bm, rotationDegree);
+                if (temp != bm) {
+                    temp.recycle();
+                }
             }
             return bm;
         } catch (OutOfMemoryError e) {
@@ -260,7 +274,11 @@ public final class BitmapUtils {
 
         Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length, getScaledOptions(options, maxWidth, maxHeight));
         if (rotationDegree != 0) {
+            Bitmap temp = bm;
             bm = rotateBitmap(bm, rotationDegree);
+            if (temp != bm) {
+                temp.recycle();
+            }
         }
         if (bm != null) {
             int w = bm.getWidth();
@@ -303,7 +321,11 @@ public final class BitmapUtils {
                 fileRotation = (fileRotation + deviceRotation) % 360;
                 if (fileRotation != 0) {
                     Log.d(TAG, "ImageTools->Rotating: " + fileRotation);
+                    Bitmap temp = bm;
                     bm = rotateBitmap(bm, fileRotation);
+                    if (temp != bm) {
+                        temp.recycle();
+                    }
                 }
                 if (bm != null) {
                     int w = bm.getWidth();
@@ -336,7 +358,11 @@ public final class BitmapUtils {
      */
     public static byte[] decodeImageUriToScaledByteArray(Context context, @NonNull Uri uri, int jpegQuality, int maxWidth, int maxHeight) {
         Bitmap bm = decodeUriToScaledBitmap(context, uri, 0, maxWidth, maxHeight);
-        return getByteArrayFromBitmap(bm, jpegQuality);
+        byte[] bytes = getByteArrayFromBitmap(bm, jpegQuality);
+        if (bm != null) {
+            bm.recycle();
+        }
+        return bytes;
     }
 
     /**
@@ -348,7 +374,11 @@ public final class BitmapUtils {
      */
     public static byte[] decodeImageFileToByteArray(@NonNull File file, int jpegQuality, int maxWidth, int maxHeight) {
         Bitmap bm = decodeFileToScaledBitmap(file, 0, maxWidth, maxHeight);
-        return getByteArrayFromBitmap(bm, jpegQuality);
+        byte[] bytes = getByteArrayFromBitmap(bm, jpegQuality);
+        if (bm != null) {
+            bm.recycle();
+        }
+        return bytes;
     }
 
     /**
@@ -373,7 +403,11 @@ public final class BitmapUtils {
             fileRotation = (fileRotation + deviceRotation) % 360;
             if (fileRotation != 0) {
                 Log.d(TAG, "ImageTools->Rotating: " + fileRotation);
+                Bitmap temp = bm;
                 bm = rotateBitmap(bm, fileRotation);
+                if (temp != bm) {
+                    temp.recycle();
+                }
             }
             if (bm != null) {
                 int w = bm.getWidth();
@@ -857,11 +891,24 @@ public final class BitmapUtils {
      *
      */
     @Nullable
-    private static Bitmap decodeBitmapRegion(byte[] data, Rect rect) {
+    public static Bitmap decodeBitmapRegion(byte[] data, Rect rect, int rotation) {
         BitmapRegionDecoder decoder = null;
         try {
+            long time = System.currentTimeMillis();
+            Log.d(TAG, "decodeBitmapRegion: Decoding bytes: " + FileUtils.getHumanReadableByteCount(data.length, false));
+            Log.d(TAG, "decodeBitmapRegion: with rect: " + rect + ", rotation: " + rotation);
             decoder = BitmapRegionDecoder.newInstance(data, 0, data.length, false);
-            return decoder.decodeRegion(rect, null);
+            Bitmap bm = decoder.decodeRegion(rect, null);
+            if (rotation != 0) {
+                Log.d(TAG, "decodeBitmapRegion: rotating...");
+                Bitmap temp = bm;
+                bm = rotateBitmap(bm, rotation);
+                if (temp != bm) {
+                    temp.recycle();
+                }
+            }
+            Log.d(TAG, "decodeBitmapRegion: Done in " + (System.currentTimeMillis() - time) + "ms");
+            return bm;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

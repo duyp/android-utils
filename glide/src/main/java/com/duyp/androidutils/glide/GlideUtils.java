@@ -1,4 +1,4 @@
-package com.duyp.androidutils.image.glide;
+package com.duyp.androidutils.glide;
 
 
 import android.content.Context;

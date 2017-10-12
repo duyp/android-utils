@@ -1,4 +1,4 @@
-package com.duyp.androidutils.image.glide.loader;
+package com.duyp.androidutils.glide.loader;
 
 import android.app.Activity;
 import android.content.Context;
