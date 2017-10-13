@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
-import com.duyp.androidutils.image.glide.loader.GlideLoader;
-import com.duyp.androidutils.image.glide.loader.SimpleGlideLoader;
+import com.duyp.androidutils.glide.loader.GlideLoader;
+import com.duyp.androidutils.glide.loader.SimpleGlideLoader;
 import com.duyp.androidutils.navigation.ActivityNavigator;
 import com.duyp.app.R;
 

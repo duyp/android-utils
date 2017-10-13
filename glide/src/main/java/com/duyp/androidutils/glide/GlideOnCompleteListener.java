@@ -1,4 +1,4 @@
-package com.duyp.androidutils.image.glide;
+package com.duyp.androidutils.glide;
 
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;

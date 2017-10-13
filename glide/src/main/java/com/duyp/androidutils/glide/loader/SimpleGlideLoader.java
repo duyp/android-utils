@@ -1,4 +1,4 @@
-package com.duyp.androidutils.image.glide.loader;
+package com.duyp.androidutils.glide.loader;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +16,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.duyp.androidutils.DimensionUtils;
-import com.duyp.androidutils.image.glide.GlideOnCompleteListener;
-import com.duyp.androidutils.image.glide.GlideUtils;
+import com.duyp.androidutils.glide.GlideOnCompleteListener;
+import com.duyp.androidutils.glide.GlideUtils;
 import com.duyp.androidutils.rx.functions.PlainConsumer;
 
 /**
