@@ -23,7 +23,7 @@ import io.realm.RealmResults;
  */
 
 public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends RecyclerView.ViewHolder>
-    extends RecyclerView.Adapter<VH> implements ListData {
+        extends RecyclerView.Adapter<VH> implements ListData {
 
     private boolean hasAutoUpdates = true;
     private boolean updateOnModification = true;
@@ -107,6 +107,22 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
         } else {
             observer = null;
         }
+    }
+
+    private void addListener(LiveRealmResults<T> data) {
+        if (observer != null) {
+            data.observe(lifecycleOwner, observer);
+        }
+    }
+
+    private void removeListener(@NonNull LiveRealmResults<T> adapterData) {
+        if (adapterData.hasObservers() && observer != null) {
+            adapterData.removeObserver(observer);
+        }
+    }
+
+    private boolean isDataValid() {
+        return adapterData != null && adapterData.getData() != null && adapterData.getData().isManaged();
     }
 
     @Override
@@ -210,22 +226,6 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
         } else if (data == null) {
             notifyDataSetChanged();
         }
-    }
-
-    private void addListener(LiveRealmResults<T> data) {
-        if (observer != null) {
-            data.observe(lifecycleOwner, observer);
-        }
-    }
-
-    private void removeListener(@NonNull LiveRealmResults<T> adapterData) {
-        if (adapterData.hasObservers() && observer != null) {
-            adapterData.removeObserver(observer);
-        }
-    }
-
-    private boolean isDataValid() {
-        return adapterData != null && adapterData.getData() != null && adapterData.getData().isManaged();
     }
 
     @Override
