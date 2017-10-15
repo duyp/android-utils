@@ -35,8 +35,8 @@ ext {
             compileVersion   : 26,
             minSdk           : 16,
             targetSdk        : 26,
-            version_name     : "2.0.3",
-            version_code     : 32
+            version_name     : "2.2.1",
+            version_code     : 33
     ]
 
     libraries = [

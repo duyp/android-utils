@@ -28,7 +28,7 @@ public interface BaseRealmDao<T extends RealmObject> {
     LiveRealmObject<T> getById(@NonNull Long id);
 
     /**
-     * Add all data into realm database
+     * Add all data into realm dataabse
      * @param data list of data
      */
     void addAll(@NonNull List<T> data);
@@ -51,7 +51,11 @@ public interface BaseRealmDao<T extends RealmObject> {
     void deleteAll();
 
     /**
-     * Close realm instance, see {@link Realm#close()}
+     * Closes the Realm instance and all its resources.
+     * <p>
+     * It's important to always remember to close Realm instances when you're done with it in order not to leak memory,
+     * file descriptors or grow the size of Realm file out of measure.
+     * {@link Realm#close()}
      */
-    void closeRealm();
+//    void closeRealm();
 }
