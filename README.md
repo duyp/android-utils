@@ -24,13 +24,23 @@ Add the dependencies to module 's gradle file
 ```groovy
 def latest_release_version = "2.0.3"
 compile "com.github.duyp.android-utils:core:${latest_release_version}" // core (basic | common utils)
-compile "com.github.duyp.android-utils:image:${latest_release_version}" // Image utils (glide, bitmap...)
+
+compile "com.github.duyp.android-utils:image:${latest_release_version}" // Bitmap Utils
+
+compile "com.github.duyp.android-utils:glide:${latest_release_version}" // Glide image loader utils
+
 compile "com.github.duyp.android-utils:navigation:${latest_release_version}" // Navigation utils
-compile "com.github.duyp.android-utils:network:${latest_release_version}" // Network utils (SSL / TLS and x509TrustManager)
+
+compile "com.github.duyp.android-utils:network:${latest_release_version}" // Network utils (SSL / TLS, Custom X509TrustManager)
+
 compile "com.github.duyp.android-utils:adapter:${latest_release_version}" // RecyclerView Adapters
+
 compile "com.github.duyp.android-utils:animation:${latest_release_version}" // Animation utils (YoYo...)
+
 compile "com.github.duyp.android-utils:rx:${latest_release_version}" // Rx utils (custom functions, task helper...)
+
 compile "com.github.duyp.android-utils:view:${latest_release_version}" // View utils, custom views...
+
 compile "com.github.duyp.android-utils:realm:${latest_release_version}" // Realm utils (realm data access objects, realm Live data mapper, Realm live data adapter
 ```
 
