@@ -47,7 +47,7 @@ compile "com.github.duyp.android-utils:realm:${latest_release_version}" // Realm
 
 * Using SNAPSHOT version (see [JitPack][2] for documentation):
 ```groovy
-compile 'com.github.duyp:android-utils:master-SNAPSHOT'
+compile 'com.github.duyp.android-utils:module_name:master-SNAPSHOT'
 ```
 
 Other options: [https://jitpack.io/v/duyp/android-utils.svg][3]
