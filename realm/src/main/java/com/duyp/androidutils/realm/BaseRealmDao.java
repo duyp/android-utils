@@ -58,4 +58,9 @@ public interface BaseRealmDao<T extends RealmObject> {
      * {@link Realm#close()}
      */
     void closeRealm();
+
+    /**
+     * @return current realm instance
+     */
+    Realm getRealm();
 }
