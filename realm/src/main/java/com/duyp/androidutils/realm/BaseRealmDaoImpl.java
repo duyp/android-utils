@@ -14,6 +14,9 @@ import io.realm.Sort;
 /**
  * Created by duypham on 9/18/17.
  * Base Realm data access object
+ * Note: each instance of Realm Data Access object must be created with a NEW Realm Instance
+ * since Realm DAO is able to close it (thus, the realm instance passed to this DAO
+ * can't be reused anymore
  */
 
 public abstract class BaseRealmDaoImpl<E extends RealmObject> implements BaseRealmDao<E> {
@@ -132,5 +135,10 @@ public abstract class BaseRealmDaoImpl<E extends RealmObject> implements BaseRea
 
     public LiveRealmObject<E> asLiveData(E data) {
         return new LiveRealmObject<E>(data);
+    }
+
+    @Override
+    public void closeRealm() {
+        mRealm.close();
     }
 }

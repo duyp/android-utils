@@ -57,5 +57,5 @@ public interface BaseRealmDao<T extends RealmObject> {
      * file descriptors or grow the size of Realm file out of measure.
      * {@link Realm#close()}
      */
-//    void closeRealm();
+    void closeRealm();
 }
