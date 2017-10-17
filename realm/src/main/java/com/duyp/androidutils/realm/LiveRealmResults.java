@@ -46,9 +46,10 @@ public class LiveRealmResults<T extends RealmModel> extends LiveData<Pair<RealmR
     protected void updateValue(Pair<RealmResults<T>, OrderedCollectionChangeSet> value) {
         try {
             this.setValue(value);
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             // if we can't set value (since current thread is a background thread), we must call postValue() instead
             // java.lang.IllegalStateException: Cannot invoke setValue on a background thread
+            // or NullPointerException if we are testing (can't get current looper when assert is main thread)
             this.postValue(value);
         }
     }
