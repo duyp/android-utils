@@ -14,16 +14,16 @@ import io.realm.RealmResults;
  * Mix version of android {@link LiveData} for {@link RealmResults}
  */
 
-public class LiveRealmResults<T extends RealmModel> extends LiveData<Pair<RealmResults<T>, OrderedCollectionChangeSet>> {
+public class LiveRealmResults<T extends RealmModel> extends LiveData<LiveRealmResults.LiveDataPair> {
 
     private RealmResults<T> mRealmResults;
 
     private final OrderedRealmCollectionChangeListener<RealmResults<T>> listener = (realmResults, changeSet) -> {
-        this.updateValue(new Pair<>(realmResults, changeSet));
+        this.updateValue(new LiveDataPair(realmResults, changeSet));
     };
 
     public LiveRealmResults(@NonNull RealmResults<T> realmResults) {
-        updateValue(new Pair<>(realmResults, null));
+        updateValue(new LiveDataPair(realmResults, null));
     }
 
     public RealmResults<T> getData() {
@@ -43,7 +43,7 @@ public class LiveRealmResults<T extends RealmModel> extends LiveData<Pair<RealmR
     }
 
 
-    protected void updateValue(Pair<RealmResults<T>, OrderedCollectionChangeSet> value) {
+    protected void updateValue(LiveDataPair value) {
         try {
             this.setValue(value);
         } catch (Exception e) {
@@ -55,15 +55,15 @@ public class LiveRealmResults<T extends RealmModel> extends LiveData<Pair<RealmR
     }
 
     @Override
-    protected void setValue(Pair<RealmResults<T>, OrderedCollectionChangeSet> value) {
+    protected void setValue(LiveDataPair value) {
         super.setValue(value);
-        mRealmResults = value.first;
+        mRealmResults = value.getData();
     }
 
     @Override
-    protected void postValue(Pair<RealmResults<T>, OrderedCollectionChangeSet> value) {
+    protected void postValue(LiveDataPair value) {
         super.postValue(value);
-        mRealmResults = value.first;
+        mRealmResults = value.getData();
     }
 
     /**
@@ -72,7 +72,25 @@ public class LiveRealmResults<T extends RealmModel> extends LiveData<Pair<RealmR
      * @param <T> type of model
      * @return live data version of given realm results
      */
-    public static <T extends RealmModel> LiveData<Pair<RealmResults<T>, OrderedCollectionChangeSet>> asLiveData(RealmResults<T> realmResults){
+    public static <T extends RealmModel> LiveRealmResults<T> asLiveData(RealmResults<T> realmResults){
         return new LiveRealmResults<T>(realmResults);
+    }
+
+    public class LiveDataPair {
+        private RealmResults<T> data;
+        private OrderedCollectionChangeSet changeSet;
+
+        public LiveDataPair(RealmResults<T> data, OrderedCollectionChangeSet set) {
+            this.data = data;
+            this.changeSet = set;
+        }
+
+        public RealmResults<T> getData() {
+            return data;
+        }
+
+        public OrderedCollectionChangeSet getChangeSet() {
+            return changeSet;
+        }
     }
 }
