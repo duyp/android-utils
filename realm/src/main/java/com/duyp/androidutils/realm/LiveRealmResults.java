@@ -2,9 +2,7 @@ package com.duyp.androidutils.realm;
 
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
-import android.util.Pair;
 
-import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
@@ -14,16 +12,16 @@ import io.realm.RealmResults;
  * Mix version of android {@link LiveData} for {@link RealmResults}
  */
 
-public class LiveRealmResults<T extends RealmModel> extends LiveData<LiveRealmResults.LiveDataPair> {
+public class LiveRealmResults<T extends RealmModel> extends LiveData<LiveRealmResultPair<T>> {
 
     private RealmResults<T> mRealmResults;
 
     private final OrderedRealmCollectionChangeListener<RealmResults<T>> listener = (realmResults, changeSet) -> {
-        this.updateValue(new LiveDataPair(realmResults, changeSet));
+        this.updateValue(new LiveRealmResultPair<T>(realmResults, changeSet));
     };
 
     public LiveRealmResults(@NonNull RealmResults<T> realmResults) {
-        updateValue(new LiveDataPair(realmResults, null));
+        updateValue(new LiveRealmResultPair<T>(realmResults, null));
     }
 
     public RealmResults<T> getData() {
@@ -42,8 +40,7 @@ public class LiveRealmResults<T extends RealmModel> extends LiveData<LiveRealmRe
         mRealmResults.removeChangeListener(listener);
     }
 
-
-    protected void updateValue(LiveDataPair value) {
+    protected void updateValue(LiveRealmResultPair<T> value) {
         try {
             this.setValue(value);
         } catch (Exception e) {
@@ -55,13 +52,13 @@ public class LiveRealmResults<T extends RealmModel> extends LiveData<LiveRealmRe
     }
 
     @Override
-    protected void setValue(LiveDataPair value) {
+    protected void setValue(LiveRealmResultPair<T> value) {
         super.setValue(value);
         mRealmResults = value.getData();
     }
 
     @Override
-    protected void postValue(LiveDataPair value) {
+    protected void postValue(LiveRealmResultPair<T> value) {
         super.postValue(value);
         mRealmResults = value.getData();
     }
@@ -74,23 +71,5 @@ public class LiveRealmResults<T extends RealmModel> extends LiveData<LiveRealmRe
      */
     public static <T extends RealmModel> LiveRealmResults<T> asLiveData(RealmResults<T> realmResults){
         return new LiveRealmResults<T>(realmResults);
-    }
-
-    public class LiveDataPair {
-        private RealmResults<T> data;
-        private OrderedCollectionChangeSet changeSet;
-
-        public LiveDataPair(RealmResults<T> data, OrderedCollectionChangeSet set) {
-            this.data = data;
-            this.changeSet = set;
-        }
-
-        public RealmResults<T> getData() {
-            return data;
-        }
-
-        public OrderedCollectionChangeSet getChangeSet() {
-            return changeSet;
-        }
     }
 }

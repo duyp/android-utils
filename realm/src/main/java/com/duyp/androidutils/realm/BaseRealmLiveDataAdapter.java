@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 
 
@@ -38,15 +37,15 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
 
     protected final LayoutInflater mInflater;
 
-    private Observer<Pair<RealmResults<T>, OrderedCollectionChangeSet>> observer;
+    private Observer<LiveRealmResultPair<T>> observer;
 
-    protected Observer<Pair<RealmResults<T>, OrderedCollectionChangeSet>> createObserver() {
+    protected Observer<LiveRealmResultPair<T>> createObserver() {
         return pair -> {
             if (pair == null) {
                 notifyDataSetChanged();
                 return;
             }
-            OrderedCollectionChangeSet changeSet = pair.second;
+            OrderedCollectionChangeSet changeSet = pair.getChangeSet();
             // null Changes means the async query returns the first time.
             if (changeSet == null) {
                 notifyDataSetChanged();
@@ -196,7 +195,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
     public RealmResults<T> getData() {
         if (isDataValid()) {
             // noinspection ConstantConditions
-            return adapterData.getValue().first;
+            return adapterData.getData();
         }
         return null;
     }
