@@ -5,6 +5,8 @@ Common Android Utils can be used in almost android projects.
 
 For documentation, please see source code 's comments.
 
+Note: All modules are compiled with Java 8 language, use android support version 26.1.0
+
 Download
 --------
 
