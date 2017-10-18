@@ -1,7 +1,9 @@
 Android-Utils
 ========
 
-Combination of common Android Utils can be used in almost android projects
+Common Android Utils can be used in almost android projects.
+
+For documentation, please see source code 's comments.
 
 Download
 --------
