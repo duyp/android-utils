@@ -25,8 +25,10 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (isHeaderOrFooter(viewType)) {
-            return createHeaderFooterViewHolder(parent);
+        if (viewType == TYPE_HEADER) {
+            return createHeaderViewHolder(parent);
+        } else if (viewType == TYPE_FOOTER) {
+            return createFooterViewHolder(parent);
         } else {
             return createHolder(parent, viewType);
         }
@@ -35,12 +37,22 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
     protected abstract RecyclerView.ViewHolder createHolder(ViewGroup parent, int viewType);
 
     /**
-     * Create view holder for header and footer
+     * Create view holder for header
      * Override this method for custom header footer View Holder
      * @param parent parent view group (e.g recyclerView)
      * @return instance of {@link HeaderFooterViewHolder}
      */
-    protected HeaderFooterViewHolder createHeaderFooterViewHolder(ViewGroup parent) {
+    protected HeaderFooterViewHolder createHeaderViewHolder(ViewGroup parent) {
+        return SimpleHeaderFooterViewHolder.createInstance(parent);
+    }
+
+    /**
+     * Create view holder for footer
+     * Override this method for custom header footer View Holder
+     * @param parent parent view group (e.g recyclerView)
+     * @return instance of {@link HeaderFooterViewHolder}
+     */
+    protected HeaderFooterViewHolder createFooterViewHolder(ViewGroup parent) {
         return SimpleHeaderFooterViewHolder.createInstance(parent);
     }
 
@@ -193,8 +205,9 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
         @Override
         public void bindView(View view) {
             base.removeAllViews();
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                    , ViewGroup.LayoutParams.WRAP_CONTENT);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            );
             params.gravity = Gravity.CENTER_HORIZONTAL;
             if (view.getLayoutParams() != null) {
                 params.height = view.getLayoutParams().height;
