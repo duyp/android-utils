@@ -1,7 +1,11 @@
 Android-Utils
 ========
 
-Combination of common Android Utils can be used in almost android projects
+Common Android Utils can be used in almost android projects.
+
+For documentation, please see source code 's comments.
+
+Note: All modules are compiled with Java 8 language, use android support version 26.1.0
 
 Download
 --------
@@ -22,7 +26,7 @@ Add the dependencies to module 's gradle file
 
 * Using [latest release][1]:
 ```groovy
-def latest_release_version = "2.2.3"
+def latest_release_version = "2.2.5"
 
 compile "com.github.duyp.android-utils:core:${latest_release_version}" // core (basic | common utils)
 compile "com.github.duyp.android-utils:image:${latest_release_version}" // Bitmap Utils
