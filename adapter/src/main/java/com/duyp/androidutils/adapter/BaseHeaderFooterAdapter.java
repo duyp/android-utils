@@ -67,6 +67,9 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
             View v = footers.get(position - headers.size() - getItemCountExceptHeaderFooter());
             //add oru view to a footer view and display it
             bindHeaderFooter((HeaderFooterViewHolder) holder, v);
+        } else {
+            // item
+            bindHolder(holder, position);
         }
     }
 
@@ -76,6 +79,8 @@ public abstract class BaseHeaderFooterAdapter extends RecyclerView.Adapter<Recyc
             vh.bindView(view);
         }
     }
+
+    protected abstract void bindHolder(RecyclerView.ViewHolder holder, int position);
 
     @Override
     public int getItemCount() {

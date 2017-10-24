@@ -167,7 +167,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends Ba
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    protected void bindHolder(RecyclerView.ViewHolder holder, int position) {
         //check what type of view our position is
         //it's one of our items, display as required
         T item = getItem(position);
