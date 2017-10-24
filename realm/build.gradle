@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    compile project(":adapter")
     // realm adapter
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:recyclerview-v7:${libs.supportVersion}"

@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
 
+import com.duyp.androidutils.adapter.BaseHeaderFooterAdapter;
+
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmObject;
@@ -17,12 +19,10 @@ import io.realm.RealmResults;
 
 /**
  * Created by duypham on 9/18/17.
- * Mix version of {@link RealmRecyclerViewAdapter}
- * used with android LiveData
+ * Modified version of {@link RealmRecyclerViewAdapter} to adapt with Android Architecture component (LiveData, LifeCycle aware)
  */
 
-public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends RecyclerView.ViewHolder>
-        extends RecyclerView.Adapter<VH> implements ListData {
+public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends BaseHeaderFooterAdapter implements ListData {
 
     private boolean hasAutoUpdates = true;
     private boolean updateOnModification = true;
@@ -30,11 +30,8 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
     @Nullable
     private LiveRealmResults<T> adapterData;
 
-    @NonNull
-    private final LifecycleOwner lifecycleOwner;
-
+    protected final LifecycleOwner lifecycleOwner;
     protected final Context context;
-
     protected final LayoutInflater mInflater;
 
     private Observer<LiveRealmResultPair<T>> observer;
@@ -51,16 +48,17 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
                 notifyDataSetChanged();
                 return;
             }
+            int offset = getHeaders().size();
             // For deletions, the adapter has to be notified in reverse order.
             OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
             for (int i = deletions.length - 1; i >= 0; i--) {
                 OrderedCollectionChangeSet.Range range = deletions[i];
-                notifyItemRangeRemoved(range.startIndex, range.length);
+                notifyItemRangeRemoved(offset + range.startIndex, range.length);
             }
 
             OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
             for (OrderedCollectionChangeSet.Range range : insertions) {
-                notifyItemRangeInserted(range.startIndex, range.length);
+                notifyItemRangeInserted(offset + range.startIndex, range.length);
             }
 
             if (!updateOnModification) {
@@ -69,7 +67,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
 
             OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
             for (OrderedCollectionChangeSet.Range range : modifications) {
-                notifyItemRangeChanged(range.startIndex, range.length);
+                notifyItemRangeChanged(offset + range.startIndex, range.length);
             }
         };
     }
@@ -78,6 +76,32 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
         this.lifecycleOwner = owner;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
+    }
+
+    /**
+     * Updates the data associated to the Adapter. Useful when the query has been changed.
+     * If the query does not change you might consider using the automaticUpdate feature.
+     *
+     * @param data the new {@link OrderedRealmCollection} to display.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public void updateData(@Nullable LiveRealmResults<T> data) {
+        if (data != null && !data.equals(adapterData)) {
+
+            if (isDataValid()) {
+                //noinspection ConstantConditions
+                removeListener(adapterData);
+            }
+
+            setData(data, hasAutoUpdates, updateOnModification);
+
+            if (hasAutoUpdates) {
+                addListener(data);
+            }
+            notifyDataSetChanged();
+        } else if (data == null) {
+            notifyDataSetChanged();
+        }
     }
 
     /**
@@ -143,7 +167,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         //check what type of view our position is
         //it's one of our items, display as required
         T item = getItem(position);
@@ -152,7 +176,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
         }
     }
 
-    protected abstract void bindHolder(VH viewHolder, @NonNull T item);
+    protected abstract void bindHolder(RecyclerView.ViewHolder viewHolder, @NonNull T item);
 
     /**
      * Returns the current ID for an item. Note that item IDs are not stable so you cannot rely on the item ID being the
@@ -167,9 +191,15 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCountExceptHeaderFooter() {
         //noinspection ConstantConditions
         return isDataValid() ? adapterData.getData().size() : 0;
+    }
+
+
+    @Nullable
+    public T getItem(int adapterPosition) {
+        return getItemByIndex(getRealItemPosition(adapterPosition));
     }
 
     /**
@@ -179,9 +209,8 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
      * @param index index of the item.
      * @return the item at the specified position, {@code null} if adapter data is not valid.
      */
-    @SuppressWarnings("WeakerAccess")
     @Nullable
-    public T getItem(int index) {
+    public T getItemByIndex(int index) {
         //noinspection ConstantConditions
         return isDataValid() ? adapterData.getData().get(index) : null;
     }
@@ -198,33 +227,6 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject, VH extends
             return adapterData.getData();
         }
         return null;
-    }
-
-    /**
-     * Updates the data associated to the Adapter. Useful when the query has been changed.
-     * If the query does not change you might consider using the automaticUpdate feature.
-     *
-     * @param data the new {@link OrderedRealmCollection} to display.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public void updateData(@Nullable LiveRealmResults<T> data) {
-
-        if (data != null && !data.equals(adapterData)) {
-
-            if (isDataValid()) {
-                //noinspection ConstantConditions
-                removeListener(adapterData);
-            }
-
-            setData(data, hasAutoUpdates, updateOnModification);
-
-            if (hasAutoUpdates) {
-                addListener(data);
-            }
-            notifyDataSetChanged();
-        } else if (data == null) {
-            notifyDataSetChanged();
-        }
     }
 
     @Override
