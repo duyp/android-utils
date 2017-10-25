@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 
 /**
  * Created by duypham on 9/18/17.
@@ -44,6 +45,12 @@ public interface BaseRealmDao<T extends RealmObject> {
      * @param itemId id of item to be deleted
      */
     void delete(@NonNull Long itemId);
+
+    /**
+     * Delete all objects belong to input query
+     * @param query realm query
+     */
+    void deleteAll(RealmQuery<T> query);
 
     /**
      * Delete all item of current class from realm database

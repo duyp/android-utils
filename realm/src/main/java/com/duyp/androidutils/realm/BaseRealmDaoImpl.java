@@ -123,6 +123,13 @@ public abstract class BaseRealmDaoImpl<E extends RealmObject> implements BaseRea
     }
 
     @Override
+    public void deleteAll(RealmQuery<E> query) {
+        mRealm.beginTransaction();
+        query.findAll().deleteAllFromRealm();
+        mRealm.commitTransaction();
+    }
+
+    @Override
     public void deleteAll() {
         mRealm.beginTransaction();
         mRealm.delete(mClass);
