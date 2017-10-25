@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 
@@ -24,6 +25,7 @@ import io.realm.RealmResults;
 
 public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends BaseHeaderFooterAdapter implements ListData {
 
+    private static final String TAG = "realm_adapter";
     private boolean hasAutoUpdates = true;
     private boolean updateOnModification = true;
 
@@ -39,6 +41,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends Ba
     protected Observer<LiveRealmResultPair<T>> createObserver() {
         return pair -> {
             if (pair == null) {
+                Log.d(TAG, "createObserver: notify data set change");
                 notifyDataSetChanged();
                 return;
             }
@@ -46,6 +49,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends Ba
             // null Changes means the async query returns the first time.
             if (changeSet == null) {
                 notifyDataSetChanged();
+                Log.d(TAG, "createObserver: notify data set change");
                 return;
             }
             int offset = getHeaders().size();
@@ -54,11 +58,13 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends Ba
             for (int i = deletions.length - 1; i >= 0; i--) {
                 OrderedCollectionChangeSet.Range range = deletions[i];
                 notifyItemRangeRemoved(offset + range.startIndex, range.length);
+                Log.d(TAG, "createObserver: NotifyItemRangeREMOVED: " + printRangeChanged(offset, range));
             }
 
             OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
             for (OrderedCollectionChangeSet.Range range : insertions) {
                 notifyItemRangeInserted(offset + range.startIndex, range.length);
+                Log.d(TAG, "createObserver: NotifyItemRangeINSERTED: " + printRangeChanged(offset, range));
             }
 
             if (!updateOnModification) {
@@ -68,6 +74,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends Ba
             OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
             for (OrderedCollectionChangeSet.Range range : modifications) {
                 notifyItemRangeChanged(offset + range.startIndex, range.length);
+                Log.d(TAG, "createObserver: NotifyItemRangeCHANGED: " + printRangeChanged(offset, range));
             }
         };
     }
@@ -76,6 +83,7 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends Ba
         this.lifecycleOwner = owner;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
+        setHasStableIds(true);
     }
 
     /**
@@ -232,5 +240,9 @@ public abstract class BaseRealmLiveDataAdapter<T extends RealmObject> extends Ba
     @Override
     public boolean isDataEmpty() {
         return getItemCount() == 0;
+    }
+
+    private static String printRangeChanged(int offset, OrderedCollectionChangeSet.Range range) {
+        return "offset: " + offset + ", range: from " + range.startIndex + " with size " + range.length;
     }
 }
