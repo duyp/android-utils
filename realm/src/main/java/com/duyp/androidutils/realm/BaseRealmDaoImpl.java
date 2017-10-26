@@ -19,7 +19,7 @@ import io.realm.Sort;
  * can't be reused anymore
  */
 
-public abstract class BaseRealmDaoImpl<E extends RealmObject> implements BaseRealmDao<E> {
+public class BaseRealmDaoImpl<E extends RealmObject> implements BaseRealmDao<E> {
 
     private final Realm mRealm;
     private final Class<E> mClass;
@@ -109,10 +109,24 @@ public abstract class BaseRealmDaoImpl<E extends RealmObject> implements BaseRea
     }
 
     @Override
+    public void addAllAsync(@NonNull List<E> data) {
+        mRealm.executeTransactionAsync(realm -> {
+            realm.insertOrUpdate(data);
+        });
+    }
+
+    @Override
     public void addOrUpdate(@NonNull E item) {
         mRealm.beginTransaction();
         mRealm.insertOrUpdate(item);
         mRealm.commitTransaction();
+    }
+
+    @Override
+    public void addOrUpdateAsync(@NonNull E item) {
+        mRealm.executeTransactionAsync(realm -> {
+            realm.insertOrUpdate(item);
+        });
     }
 
     @Override
@@ -134,6 +148,13 @@ public abstract class BaseRealmDaoImpl<E extends RealmObject> implements BaseRea
         mRealm.beginTransaction();
         mRealm.delete(mClass);
         mRealm.commitTransaction();
+    }
+
+    @Override
+    public void deleteAllAsync() {
+        mRealm.executeTransactionAsync(realm -> {
+            realm.delete(mClass);
+        });
     }
 
     public LiveRealmResults<E> asLiveData(RealmResults<E> realmResults){

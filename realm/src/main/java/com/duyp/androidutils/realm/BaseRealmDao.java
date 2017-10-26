@@ -30,15 +30,27 @@ public interface BaseRealmDao<T extends RealmObject> {
 
     /**
      * Add all data into realm dataabse
-     * @param data list of data
+     * @param data list of data to be inserted
      */
     void addAll(@NonNull List<T> data);
+
+    /**
+     * Add all data into realm asynchronous
+     * @param data list of data to be inserted
+     */
+    void addAllAsync(@NonNull List<T> data);
 
     /**
      * Add or update an object into realm database
      * @param item item to be added or updated
      */
     void addOrUpdate(@NonNull T item);
+
+    /**
+     * Add or update an object into realm database asynchronous
+     * @param item item to be added or updated
+     */
+    void addOrUpdateAsync(@NonNull T item);
 
     /**
      * delete an item from realm database
@@ -56,6 +68,11 @@ public interface BaseRealmDao<T extends RealmObject> {
      * Delete all item of current class from realm database
      */
     void deleteAll();
+
+    /**
+     * Delete all item of current class from realm database  asynchronous
+     */
+    void deleteAllAsync();
 
     /**
      * Closes the Realm instance and all its resources.
