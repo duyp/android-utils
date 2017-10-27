@@ -26,7 +26,7 @@ Add the dependencies to module 's gradle file
 
 * Using [latest release][1]:
 ```groovy
-def latest_release_version = "2.2.5"
+def latest_release_version = "2.2.8"
 
 compile "com.github.duyp.android-utils:core:${latest_release_version}" // core (basic | common utils)
 compile "com.github.duyp.android-utils:image:${latest_release_version}" // Bitmap Utils
